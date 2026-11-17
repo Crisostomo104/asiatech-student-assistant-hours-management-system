@@ -1,0 +1,300 @@
+/* ------------------------------------------------------------
+           ANTI-SHAKE FIX: the page was shifting/wobbling horizontally
+           whenever the vertical scrollbar appeared or disappeared --
+           e.g. opening a modal (Bootstrap temporarily hides the
+           scrollbar and adds padding-right to compensate, causing a
+           jump), or switching tabs to content of a different height.
+
+           Fix: always reserve the scrollbar's space so its presence
+           never changes the available width, AND cancel Bootstrap's
+           own compensation padding since it's no longer needed.
+           Scrolling itself stays fully working (this uses `scroll`,
+           not `hidden`, unlike an earlier attempt that disabled
+           scrolling entirely). */
+        html {
+            overflow-y: scroll;
+            scrollbar-gutter: stable;
+        }
+        body.modal-open {
+            padding-right: 0 !important;
+        }
+        /* ------------------------------------------------------------ */
+
+        /* Mobile bottom nav (SA side only) -- force a stable, always-fixed
+           position regardless of ancestor stacking/scroll quirks. Some
+           mobile browsers "lose" position:fixed elements during scroll if
+           the element isn't promoted to its own compositing layer -- the
+           translateZ(0)/backface-visibility hack below forces that. */
+        #saTabsMobile {
+            position: fixed !important;
+            bottom: env(safe-area-inset-bottom, 0) !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 2000;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform;
+            box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            background-color: #fff;
+        }
+        body {
+            padding-bottom: calc(76px + env(safe-area-inset-bottom, 0));
+        }
+        #saTabsMobile .sa-tab-trigger {
+            color: #6c757d;
+            border: none;
+        }
+        #saTabsMobile .sa-tab-trigger.active {
+            color: var(--brand-green);
+            font-weight: 600;
+            background-color: transparent;
+        }
+        /* Clearance so scrolled content never ends up hidden behind the
+           fixed bottom nav -- applied as padding (invisible), not a
+           visible spacer block. */
+        @media (max-width: 767.98px) {
+            #saTabsContent {
+                padding-bottom: 76px;
+            }
+        }
+        /* Bulk 15-day table: visually dim weekend rows (usually no duty),
+           inputs remain fully usable if the SA needs to fill them anyway. */
+        .bulk-weekend-row {
+            background-color: #f8f9fa;
+            opacity: 0.65;
+        }
+        .bulk-weekend-row:focus-within {
+            opacity: 1;
+        }
+        .bulk-dtr-table {
+            width: 100%;
+            table-layout: auto;
+        }
+        .bulk-dtr-table th,
+        .bulk-dtr-table td {
+            white-space: nowrap;
+        }
+        .bulk-dtr-table input {
+            min-width: 120px;
+            max-width: 100%;
+        }
+        .bulk-dtr-table .bulk-row-hours {
+            min-width: 70px;
+        }
+        .bulk-dtr-table td:first-child {
+            white-space: nowrap;
+        }
+        /* My DTR history row spacing + wrap behavior */
+        #tab-mydtr .table th,
+        #tab-mydtr .table td {
+            vertical-align: middle;
+        }
+        #tab-mydtr .table td {
+            white-space: nowrap;
+        }
+        @media (max-width: 575.98px) {
+            #tab-mydtr .table td {
+                white-space: normal;
+            }
+        }
+        /* Make OT Cashout desktop tab white text and green background when active */
+        .nav-pills .nav-link.active.text-success {
+            color: #fff !important;
+            background-color: #198754 !important;
+        }
+
+        /* Dashboard top bar enhancements */
+        .navbar.dashboard-navbar {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            padding-top: 0.9rem;
+            padding-bottom: 0.9rem;
+            padding-left: 1.75rem;
+            padding-right: 1.75rem;
+        }
+
+        .navbar.dashboard-navbar .brand-logo {
+            height: 34px;
+            width: auto;
+        }
+        
+        .navbar.dashboard-navbar .brand-name {
+            font-size: 1.05rem;
+            letter-spacing: 0.01em;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .navbar.dashboard-navbar .navbar-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        
+        .navbar.dashboard-navbar .role-label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.02em;
+        }
+        
+        .navbar.dashboard-navbar .btn-outline-light {
+            min-width: unset;
+            padding-left: 0.85rem;
+            padding-right: 0.85rem;
+        }
+
+        .dashboard-content {
+            padding-left: 1.75rem;
+            padding-right: 1.75rem;
+        }
+
+        /* ============================================================
+           BRAND THEME (green / gold) — overrides Bootstrap's default
+           blue "primary" everywhere it's used across dashboard.php,
+           head_sa_dashboard.php and sa_dashboard.php (both views are
+           require()'d into this page, so they share this stylesheet
+           automatically — no need to edit those files separately).
+
+           bg-success / bg-danger / bg-warning / bg-info / bg-dark are
+           left as Bootstrap defaults on purpose: those carry semantic
+           meaning (Approved/Rejected/Pending/report grouping) that
+           should stay recognizable rather than all turning green.
+           ============================================================ */
+        :root {
+            --brand-green: #0b5c34;
+            --brand-green-dark: #073c22;
+            --brand-gold: #f7a600;
+        }
+
+        .navbar.dashboard-navbar {
+            background-color: var(--brand-green) !important;
+            border-bottom: 3px solid var(--brand-gold);
+        }
+
+        .btn-primary {
+            background-color: var(--brand-green) !important;
+            border-color: var(--brand-green) !important;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background-color: var(--brand-green-dark) !important;
+            border-color: var(--brand-green-dark) !important;
+        }
+        .btn-outline-primary {
+            color: var(--brand-green) !important;
+            border-color: var(--brand-green) !important;
+        }
+        .btn-outline-primary:hover,
+        .btn-outline-primary:focus,
+        .btn-outline-primary:active {
+            background-color: var(--brand-green) !important;
+            border-color: var(--brand-green) !important;
+            color: #fff !important;
+        }
+        .text-primary {
+            color: var(--brand-green) !important;
+        }
+        .bg-primary {
+            background-color: var(--brand-green) !important;
+        }
+        .border-primary {
+            border-color: var(--brand-green) !important;
+        }
+        .badge.bg-primary-subtle {
+            background-color: rgba(11, 92, 52, 0.12) !important;
+            color: var(--brand-green) !important;
+        }
+        .text-primary-emphasis {
+            color: var(--brand-green-dark) !important;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--brand-green) !important;
+        }
+        .page-item.active .page-link {
+            background-color: var(--brand-green) !important;
+            border-color: var(--brand-green) !important;
+        }
+        .page-link {
+            color: var(--brand-green) !important;
+        }
+        a {
+            color: var(--brand-green);
+        }
+        a:hover {
+            color: var(--brand-green-dark);
+        }
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--brand-green) !important;
+            box-shadow: 0 0 0 0.2rem rgba(11, 92, 52, 0.15) !important;
+        }
+        /* SA dashboard completion bar: gold while in progress, Bootstrap
+           success-green once complete -- keeps the two states visually
+           distinct instead of both becoming the same green. */
+        .progress-bar.bg-primary {
+            background-color: var(--brand-gold) !important;
+            color: #1a1a1a !important;
+        }
+
+        .sa-hours-progress {
+            height: 25px;
+        }
+        .sa-hours-progress-bar {
+            font-weight: bold;
+        }
+        #saTabsMobile {
+            z-index: 1030;
+        }
+        .sa-mobile-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .min-width-100 {
+            min-width: 100px;
+        }
+        .min-width-70 {
+            min-width: 70px;
+        }
+        .print-only-heading,
+        .print-only-voucher {
+            display: none;
+        }
+
+        /* Print styles for clean report generation */
+        @media print {
+            body {
+                background-color: #fff !important;
+            }
+            .navbar, .nav, .btn, #saTabsMobile, .modal, 
+            .dataTables_wrapper .row:first-child, .dataTables_wrapper .row:last-child,
+            .hide-on-print {
+                display: none !important;
+            }
+            .print-only-heading {
+                display: block !important;
+            }
+            .table-responsive {
+                overflow-x: visible !important;
+            }
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .card-header {
+                background-color: transparent !important;
+                border-bottom: 2px solid #000 !important;
+                padding-left: 0 !important;
+            }
+            .container, .container-fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }

@@ -1,0 +1,1 @@
+<?php // Removed — session watcher stripped. ?>

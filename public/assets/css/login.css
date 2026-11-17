@@ -1,0 +1,570 @@
+:root {
+            --brand-green: #0b5c34;
+            --brand-green-dark: #073c22;
+            --brand-gold: #f7a600;
+            --brand-ink: #142219;
+        }
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at top left, #eef7f1 0%, #f6faf6 35%, #f4f8f3 100%);
+        }
+
+        /* ---- Background photo slideshow ----
+           Two (really N) full-viewport layers stacked on top of each
+           other, each holding one photo. Only the "active" layer has
+           opacity 1; switching which one is active is a pure CSS
+           opacity transition, so the swap itself is smooth/cheap --
+           no reflow, no re-decoding, because every photo is already
+           painted in the DOM (and <link rel=preload> above already
+           forced the browser to fetch + decode all of them upfront). */
+        .bg-slideshow {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.8s ease-in-out;
+            will-change: opacity;
+        }
+        .bg-slide.active {
+            opacity: 1;
+        }
+        /* Dark + green wash so white/green UI on top stays readable
+           over any photo, plus keeps the brand color present. */
+        .bg-slideshow::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(7, 25, 15, 0.55) 0%, rgba(7, 25, 15, 0.72) 100%),
+                linear-gradient(135deg, rgba(11, 92, 52, 0.35) 0%, rgba(11, 92, 52, 0) 60%);
+            z-index: 1;
+        }
+
+        /* Everything else needs to sit above the background layer. */
+        .site-header,
+        .login-container,
+        .site-footer {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ---- Header (matches dashboard.php's top navbar: solid brand
+           green with a gold underline) ---- */
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.75rem;
+            background-color: var(--brand-green);
+            border-bottom: 3px solid var(--brand-gold);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            flex: 0 0 auto;
+        }
+        .site-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .site-header .brand img {
+            height: 34px;
+            width: auto;
+        }
+        .site-header .brand-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #ffffff;
+            letter-spacing: 0.01em;
+        }
+        .site-header .brand-name small {
+            display: block;
+            font-weight: 500;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 0.02em;
+        }
+
+        /* ---- Main content ---- */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 auto;
+            width: 100%;
+            padding: 2rem 1rem;
+        }
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* ---- Left branding / About the System panel (desktop only) ---- */
+        .brand-panel {
+            flex: 1 1 0;
+            max-width: 520px;
+            display: block;
+        }
+        .brand-panel h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.25;
+            margin-bottom: 1.25rem;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+        }
+        .about-panel {
+            margin-top: 2rem;
+            padding-top: 1.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .about-panel h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--brand-gold);
+            margin-bottom: 0.6rem;
+        }
+        .about-panel p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+        .about-panel ul {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            padding-left: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+        .about-panel li {
+            margin-bottom: 0.25rem;
+        }
+        .about-panel .about-credit {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.65);
+        }
+        .about-panel a {
+            color: var(--brand-gold);
+        }
+        .calculator-table-wrap {
+            margin-top: .75rem;
+            border: 1px solid #e5ebe7;
+            border-radius: .65rem;
+            overflow-x: auto;
+        }
+        .calculator-table {
+            min-width: 430px;
+            margin-bottom: 0;
+        }
+        .calculator-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #f5f8f6;
+            color: #526157;
+            font-size: .72rem;
+            white-space: nowrap;
+        }
+        .calculator-table td {
+            vertical-align: middle;
+        }
+        .calculator-table th:first-child {
+            min-width: 78px;
+        }
+        .calculator-table .calculator-time {
+            min-width: 105px;
+            padding-left: .4rem;
+            padding-right: .4rem;
+        }
+        .calculator-day-total {
+            color: var(--brand-green);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .calculator-day-error {
+            display: block;
+            max-width: 100px;
+            color: #b02a37;
+            font-size: .65rem;
+            line-height: 1.2;
+        }
+        .calculator-period-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .75rem;
+            margin-top: .75rem;
+            padding: .8rem 1rem;
+            border-radius: .75rem;
+            background: #f1f7f3;
+        }
+        .calculator-period-total span {
+            color: #526157;
+            font-size: .84rem;
+            font-weight: 600;
+        }
+        .calculator-period-total strong {
+            color: var(--brand-green);
+            font-size: 1.2rem;
+            white-space: nowrap;
+        }
+
+        /* ---- Login card ---- */
+        .login-card {
+            border: none;
+            border-top: 4px solid var(--brand-green);
+            border-radius: 1.2rem;
+            box-shadow: 0 32px 70px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            max-width: 520px;
+            width: 100%;
+            flex: 0 0 auto;
+        }
+        .auth-panel {
+            flex: 0 1 520px;
+            max-width: 520px;
+            width: 100%;
+        }
+        .btn-calculator-trigger {
+            border: 1px solid rgba(11, 92, 52, .28);
+            color: var(--brand-green);
+            background: #f6faf7;
+            font-weight: 600;
+            transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+        }
+        .btn-calculator-trigger:hover {
+            border-color: var(--brand-green);
+            color: #fff;
+            background: var(--brand-green);
+        }
+        .btn-calculator-trigger:focus-visible {
+            outline: 3px solid rgba(247, 166, 0, .8);
+            outline-offset: 2px;
+        }
+        .calculator-modal .modal-content {
+            overflow: hidden;
+            border: 0;
+            border-radius: 1rem;
+        }
+        .calculator-modal .modal-header > div {
+            min-width: 0;
+        }
+        .calculator-modal .modal-body {
+            padding: 1rem;
+        }
+        .login-card .card-body {
+            padding: 2.25rem;
+        }
+        .floating-field {
+            position: relative;
+        }
+        .floating-field > .form-control {
+            height: 56px;
+            padding: .75rem .85rem;
+        }
+        .floating-field > .form-control:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px #fff inset;
+            -webkit-text-fill-color: var(--brand-ink);
+        }
+        .floating-field > label {
+            position: absolute;
+            top: 50%;
+            left: .7rem;
+            z-index: 2;
+            margin: 0;
+            padding: 0 .25rem;
+            color: #6a7a71;
+            background: #fff;
+            line-height: 1;
+            pointer-events: none;
+            transform: translateY(-50%);
+            transform-origin: left center;
+            transition: top .16s ease, transform .16s ease, color .16s ease;
+        }
+        .floating-field > .form-control:focus + label,
+        .floating-field > .form-control:not(:placeholder-shown) + label,
+        .floating-field > .form-control:-webkit-autofill + label {
+            top: 0;
+            color: var(--brand-green);
+            transform: translateY(-50%) scale(.86);
+        }
+        .floating-field > #id_number {
+            padding-right: 9.5rem;
+        }
+        .password-floating-field > .form-control {
+            padding-right: 3.25rem;
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: .35rem;
+            z-index: 3;
+            padding: .4rem .55rem;
+            border: 0;
+            color: #526157;
+            background: transparent;
+            transform: translateY(-50%);
+        }
+        .password-toggle:hover,
+        .password-toggle:focus {
+            color: var(--brand-green);
+            background: #f1f7f3;
+        }
+        .password-toggle:focus-visible {
+            outline: 2px solid var(--brand-gold);
+            outline-offset: 1px;
+        }
+        .login-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: var(--brand-ink);
+        }
+        .login-subtitle {
+            color: #6a7a71;
+        }
+        .form-label {
+            font-weight: 600;
+        }
+        .form-control:focus {
+            border-color: var(--brand-green);
+            box-shadow: 0 0 0 0.2rem rgba(11, 92, 52, 0.15);
+        }
+        .btn-primary {
+            background-color: var(--brand-green);
+            border-color: var(--brand-green);
+            box-shadow: 0 10px 20px rgba(11, 92, 52, 0.18);
+            font-weight: 600;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active {
+            background-color: var(--brand-green-dark) !important;
+            border-color: var(--brand-green-dark) !important;
+            box-shadow: 0 10px 20px rgba(11, 92, 52, 0.25);
+        }
+        .auth-panel .btn-primary,
+        .auth-panel .btn-primary:disabled {
+            color: #fff !important;
+            background-color: var(--brand-green) !important;
+            border-color: var(--brand-green) !important;
+        }
+        .auth-panel .btn-primary:hover,
+        .auth-panel .btn-primary:focus,
+        .auth-panel .btn-primary:active {
+            background-color: var(--brand-green-dark) !important;
+            border-color: var(--brand-green-dark) !important;
+        }
+        .auth-panel .btn-primary:disabled {
+            opacity: .65;
+        }
+        .alert {
+            border-radius: 0.85rem;
+        }
+        .login-feedback {
+            display: block;
+            padding: .8rem .9rem;
+            border: 1px solid transparent;
+            border-radius: .85rem;
+            font-size: .88rem;
+            line-height: 1.45;
+            text-align: left;
+        }
+        .login-feedback-copy {
+            display: flex;
+            flex-direction: column;
+            gap: .12rem;
+            min-width: 0;
+        }
+        .login-feedback-title {
+            font-size: .9rem;
+            font-weight: 700;
+        }
+        .login-feedback-error {
+            border-color: #f0c7ca;
+            color: #74323a;
+            background: #fff7f7;
+        }
+        .login-feedback-warning {
+            border-color: #f2deb0;
+            color: #74581a;
+            background: #fffaf0;
+        }
+        .about-link {
+            color: #6a7a71;
+            text-decoration: none;
+        }
+        .about-link:hover {
+            color: var(--brand-green);
+            text-decoration: underline;
+        }
+        #domainHint {
+            background-color: rgba(11, 92, 52, 0.08) !important;
+            color: var(--brand-green) !important;
+            border-color: rgba(11, 92, 52, 0.25) !important;
+        }
+
+        /* ---- Footer ---- */
+        .site-footer {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 1rem 1rem 1.25rem;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .site-footer a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+        .site-footer a:hover {
+            color: var(--brand-gold);
+            text-decoration: underline;
+        }
+        .site-footer .footer-sep {
+            margin: 0 0.4rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .turnstile-widget {
+            width: 100%;
+            max-width: 360px;
+            margin-inline: auto;
+        }
+        .about-panel,
+        .about-modal-body {
+            text-align: justify;
+        }
+        .login-logo {
+            max-height: 70px;
+            width: auto;
+        }
+        .domain-hint {
+            cursor: pointer;
+            display: none;
+            user-select: none;
+        }
+        .about-link {
+            cursor: pointer;
+        }
+        .beta-version {
+            color: gray;
+            padding: 6px;
+        }
+        .modal-brand-header {
+            background: var(--brand-green);
+        }
+        .hours-progress {
+            height: 1rem;
+        }
+        .about-modal-footer {
+            justify-content: center;
+        }
+        .head-account-summary {
+            display: flex;
+            flex-direction: column;
+            gap: .25rem;
+            padding: .7rem .9rem;
+            border: 1px solid #dfe8e2;
+            border-radius: .75rem;
+            background: #f6faf7;
+            text-align: left;
+        }
+        .head-account-label {
+            color: #6a7a71;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+        .head-account-value {
+            color: var(--brand-ink);
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+        .auth-panel .btn-cancel-login {
+            border: 1px solid rgba(11, 92, 52, .28);
+            color: var(--brand-green);
+            background: transparent;
+            box-shadow: none;
+            font-weight: 600;
+        }
+        .auth-panel .btn-cancel-login:hover,
+        .auth-panel .btn-cancel-login:focus-visible {
+            border-color: var(--brand-green-dark);
+            color: #fff;
+            background: var(--brand-green-dark);
+        }
+        .auth-panel .btn-cancel-login:focus-visible {
+            outline: 3px solid rgba(247, 166, 0, .8);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 991.98px) {
+            .login-wrapper {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .brand-panel {
+                display: none;
+            }
+            .auth-panel {
+                max-width: 520px;
+                width: 100%;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-calculator-trigger,
+            .floating-field > label {
+                transition-duration: .01ms !important;
+            }
+        }
+        @media (max-width: 575.98px) {
+            body {
+                height: auto;
+                min-height: 0;
+            }
+            .site-header {
+                padding: .75rem 1rem;
+            }
+            .login-container {
+                align-items: flex-start;
+                flex: 0 0 auto;
+                padding: .65rem .75rem .25rem;
+            }
+            .login-card .card-body {
+                padding: 1.35rem;
+            }
+            .login-feedback {
+                padding: .7rem .75rem;
+            }
+            .calculator-modal .modal-body {
+                padding: .75rem;
+            }
+            .site-footer {
+                padding: .75rem .5rem;
+                font-size: .72rem;
+            }
+        }
+
+        /* On desktop, keep the About Us modal trigger out of the way. */
+        @media (min-width: 992px) {
+            .about-link-wrap {
+                display: none;
+            }
+        }

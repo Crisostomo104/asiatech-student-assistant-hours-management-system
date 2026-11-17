@@ -1,0 +1,23 @@
+# ============================================================
+# Clean URLs: allow visiting/linking to pages WITHOUT the .php
+# extension (e.g. /sahms/public/dashboard instead of dashboard.php).
+#
+# Deliberately does NOT add a redirect rule that sends .php URLs
+# to their extensionless version. A 301/302 redirect can cause
+# browsers to drop the request body on POST requests (form
+# submissions), which would silently break every form in this
+# app. Both dashboard.php and dashboard will keep working side
+# by side -- this only ADDS the clean option, it doesn't remove
+# the old one.
+# ============================================================
+
+RewriteEngine On
+
+# If the exact file/folder requested doesn't exist as-is...
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# ...but adding .php to it does exist, serve that file instead
+# (URL in the browser's address bar stays clean, unchanged).
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L,QSA]

@@ -1,0 +1,16 @@
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+
+# Canonicalize legacy login URLs while preserving POST submissions.
+RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+RewriteCond %{THE_REQUEST} \s/+sahms/(?:public/login(?:\.php)?|login\.php)/?(?:[?\s]) [NC]
+RewriteRule ^(?:public/)?login(?:\.php)?/?$ /sahms/login? [R=301,L]
+
+# Route clean application paths to their PHP entry points.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.[^/]+$
+RewriteRule ^(?!public/)(.+?)/?$ public/$1.php [L,QSA]
