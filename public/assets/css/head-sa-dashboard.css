@@ -220,14 +220,21 @@
                     border:1px solid #000;padding:.28rem .22rem;text-align:center;
                     vertical-align:middle;background:#fff;
                 }
+                #tab-reports .av-table tbody td.av-hrs,
+                #tab-reports .av-table tbody td.av-leave,
+                #tab-reports .av-table tbody td#avMay,
+                #tab-reports .av-table tbody td#avEarnTotal,
+                #tab-reports .av-table tbody td#avEarnLeave{
+                    text-align:right;padding-right:.35rem;
+                }
                 #tab-reports .av-table thead th{background:#e9edf1 !important;font-weight:700;}
-                #tab-reports .av-table th:first-child{width:16%;}
-                #tab-reports .av-table .av-name-cell{text-align:left;width:16%;word-break:normal;}
+                #tab-reports .av-table th:first-child{width:14%;}
+                #tab-reports .av-table .av-name-cell{text-align:left;width:14%;word-break:normal;}
                 #tab-reports .av-table th:last-child,
-                #tab-reports .av-table td:last-child{width:4%;}
-                #tab-reports .av-table th[colspan="2"]{width:8%;}
-                #tab-reports .av-table th[colspan="2"]:nth-last-child(2){width:15%;}
-                #tab-reports .av-table th[colspan="1"]:nth-child(2){width:5%;}
+                                #tab-reports .av-table td:last-child{width:5%;}
+                #tab-reports .av-table th[colspan="2"]{width:9%;}
+                #tab-reports .av-table th[colspan="2"]:nth-last-child(2){width:14%;}
+                #tab-reports .av-table th[colspan="1"]:nth-child(2){width:4%;}
                 #tab-reports .av-table tbody td:nth-last-child(2),
                 #tab-reports .av-table tbody td:nth-last-child(3){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
@@ -260,10 +267,10 @@
                     #tab-reports .av-form{padding:0;max-width:97%;margin:0 auto;}
                     #tab-reports .av-select,#tab-reports .av-other{display:none !important;}
                     #tab-reports .av-table th{background:#e9edf1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-                    #tab-reports .av-table{font-size:10px;}
-                    #tab-reports .av-table thead th{font-size:9px;}
+                    #tab-reports .av-table{font-size:9px;}
+                    #tab-reports .av-table thead th{font-size:9px;white-space:nowrap;}
                     #tab-reports .av-table th,
-                                        #tab-reports .av-table td{padding:.1rem .06rem;}
+                                        #tab-reports .av-table td{padding:.08rem .04rem;}
                     #tab-reports .av-rule{border-top:1px solid #000;}
                     #tab-reports .av-computation{background:none !important;}
                     #tab-reports .annual-hours-table > thead th,

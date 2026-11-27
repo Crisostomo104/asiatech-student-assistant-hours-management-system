@@ -1197,14 +1197,14 @@ $allCashouts = get_all_ot_cashouts();
                                             <tr>
                                                 <th rowspan="2">Name</th>
                                                 <th colspan="1">MAY</th>
-                                                <?php foreach (['JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'] as $avMonthLabel): ?>
+                                                <?php foreach (['JUN','JUL','AUG','SEP','OCT','NOV','DEC'] as $avMonthLabel): ?>
                                                     <th colspan="2"><?= $avMonthLabel ?></th>
                                                 <?php endforeach; ?>
                                                 <th colspan="2">Earning Time</th>
                                                 <th rowspan="2">Sig.</th>
                                             </tr>
                                             <tr>
-                                                <th>Absences</th>
+                                                <th>Abs.</th>
                                                 <?php for ($avI = 0; $avI < 7; $avI++): ?>
                                                     <th>Hrs</th><th>Leave</th>
                                                 <?php endfor; ?>
