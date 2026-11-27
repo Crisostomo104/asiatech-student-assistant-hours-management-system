@@ -137,13 +137,13 @@
                 /* Group highlights: entry area (Student Assistant + Jan-Dec) in
                    soft green, computed Total/OT/Remaining block in soft gold. */
                 #tab-reports .annual-hours-table > thead tr > th:nth-child(-n+13){
-                    background:#f8f9fa;
+                    background:#e7f1ea;
                 }
                 #tab-reports .annual-hours-table > tbody tr > :nth-child(-n+13){
                     background:#fff;
                 }
                 #tab-reports .annual-hours-table > thead tr > th:nth-last-child(-n+3){
-                    background:#f8f9fa;
+                    background:#ffedc9;
                 }
                 #tab-reports .annual-hours-table > tbody td:nth-last-child(-n+3){
                     background:#fff;
