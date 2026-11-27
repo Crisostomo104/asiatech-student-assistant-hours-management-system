@@ -15,9 +15,10 @@ $report = get_annual_hours_summary($year);
 $monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 $monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 $columns = ['Name', 'Advance Hours'];
-foreach ($monthLabels as $monthLabel) {
-    $columns[] = $monthLabel . ' Total';
-    $columns[] = $monthLabel . ' OT';
+foreach ($monthLabels as $index => $monthLabel) {
+    $monthEndDay = (int)date('t', mktime(0, 0, 0, $index + 1, 1, $year));
+    $columns[] = $monthLabel . ' 1-15';
+    $columns[] = $monthLabel . ' 16-' . $monthEndDay;
 }
 $columns = array_merge($columns, ['Remaining Hours', 'Total hrs', 'OT hrs']);
 
@@ -25,8 +26,8 @@ $csvHandle = fopen('php://temp', 'r+');
 fputcsv($csvHandle, $columns);
 
 $totAdvance = 0.0;
-$monthTotals = array_fill_keys($monthKeys, 0.0);
-$monthOtTotals = array_fill_keys($monthKeys, 0.0);
+$monthFirstTotals = array_fill_keys($monthKeys, 0.0);
+$monthSecondTotals = array_fill_keys($monthKeys, 0.0);
 $totAll = $totOt = $totRemaining = 0.0;
 
 foreach ($report as $row) {
@@ -45,12 +46,12 @@ foreach ($report as $row) {
 
     $csvRow = [$row['full_name'], number_format($advanceHrs, 2, '.', '')];
     foreach ($monthKeys as $monthKey) {
-        $monthTotal = (float)$row[$monthKey];
-        $monthOt = (float)$row[$monthKey . '_ot'];
-        $csvRow[] = $monthTotal > 0 ? number_format($monthTotal, 1, '.', '') : '';
-        $csvRow[] = $monthOt > 0 ? number_format($monthOt, 1, '.', '') : '';
-        $monthTotals[$monthKey] += $monthTotal;
-        $monthOtTotals[$monthKey] += $monthOt;
+        $monthFirst = (float)($row[$monthKey . '_first'] ?? $row[$monthKey]);
+        $monthSecond = (float)($row[$monthKey . '_second'] ?? 0);
+        $csvRow[] = $monthFirst > 0 ? number_format($monthFirst, 1, '.', '') : '';
+        $csvRow[] = $monthSecond > 0 ? number_format($monthSecond, 1, '.', '') : '';
+        $monthFirstTotals[$monthKey] += $monthFirst;
+        $monthSecondTotals[$monthKey] += $monthSecond;
     }
     $csvRow[] = $remainingDisplay;
     $csvRow[] = number_format($totalHrs, 1, '.', '');
@@ -64,8 +65,8 @@ foreach ($report as $row) {
 if ($report) {
     $totalRow = ['Total', number_format($totAdvance, 1, '.', '')];
     foreach ($monthKeys as $monthKey) {
-        $totalRow[] = number_format($monthTotals[$monthKey], 1, '.', '');
-        $totalRow[] = number_format($monthOtTotals[$monthKey], 1, '.', '');
+        $totalRow[] = number_format($monthFirstTotals[$monthKey], 1, '.', '');
+        $totalRow[] = number_format($monthSecondTotals[$monthKey], 1, '.', '');
     }
     $totalRow[] = number_format($totRemaining, 1, '.', '');
     $totalRow[] = number_format($totAll, 1, '.', '');

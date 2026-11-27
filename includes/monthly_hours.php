@@ -4,6 +4,11 @@ declare(strict_types=1);
 /**
  * Builds the annual summary for active SAs from monthly input rows. Approved
  * DTR totals remain a read-only fallback where monthly hours are not entered.
+ *
+ * Each month is entered in two halves: days 1-15 and days 16 to the end of
+ * that month. `total_hours` keeps the sum of both halves so existing reports
+ * that read the month total keep the same numbers. OT values stay in their
+ * own column and are not entered in the half-month boxes.
  */
 function get_annual_hours_summary(int $year, ?int $userId = null): array
 {
@@ -51,7 +56,8 @@ function get_annual_hours_summary(int $year, ?int $userId = null): array
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $manualSql = 'SELECT user_id, summary_month, total_hours, ot_hours
+    $manualSql = 'SELECT user_id, summary_month, total_hours, ot_hours,
+                         first_half_hours, second_half_hours
                   FROM sa_monthly_hours WHERE summary_year = :summary_year';
     if ($userId !== null) {
         $manualSql .= ' AND user_id = :user_id';
@@ -65,9 +71,24 @@ function get_annual_hours_summary(int $year, ?int $userId = null): array
 
     $manualByUser = [];
     foreach ($manualStmt->fetchAll(PDO::FETCH_ASSOC) as $entry) {
+        $total = (float)$entry['total_hours'];
+        $ot = (float)$entry['ot_hours'];
+        $first = (float)($entry['first_half_hours'] ?? 0);
+        $second = (float)($entry['second_half_hours'] ?? 0);
+
+        // Backwards compatibility: rows saved before the half-month columns
+        // existed have zero halves. Rebuild them from the stored total/OT so
+        // the summary still shows the original numbers until migrated.
+        if ($first == 0.0 && $second == 0.0 && $total > 0.0) {
+            $first = max(0.0, $total - $ot);
+            $second = min($ot, $total);
+        }
+
         $manualByUser[(int)$entry['user_id']][(int)$entry['summary_month']] = [
-            'total_hours' => (float)$entry['total_hours'],
-            'ot_hours' => (float)$entry['ot_hours'],
+            'total_hours' => $total,
+            'ot_hours' => $ot,
+            'first_half_hours' => $first,
+            'second_half_hours' => $second,
         ];
     }
 
@@ -84,10 +105,16 @@ function get_annual_hours_summary(int $year, ?int $userId = null): array
             $legacyHours += $legacyValue;
 
             if (isset($manualByUser[$uid][$month])) {
-                $row[$key] = $manualByUser[$uid][$month]['total_hours'];
+                $first = $manualByUser[$uid][$month]['first_half_hours'];
+                $second = $manualByUser[$uid][$month]['second_half_hours'];
+                $row[$key . '_first'] = $first;
+                $row[$key . '_second'] = $second;
+                $row[$key] = $first + $second;
                 $row[$key . '_ot'] = $manualByUser[$uid][$month]['ot_hours'];
                 $manualOtHours += $row[$key . '_ot'];
             } else {
+                $row[$key . '_first'] = $legacyValue;
+                $row[$key . '_second'] = 0.0;
                 $row[$key] = $legacyValue;
                 $row[$key . '_ot'] = 0.0;
             }
@@ -112,20 +139,21 @@ function get_annual_hours_summary(int $year, ?int $userId = null): array
 }
 
 /**
- * Saves the editable Jan-Dec totals and their OT portions in one transaction.
- * The monthly total includes the OT portion.
+ * Saves the editable Jan-Dec half-month hours in one transaction.
+ * The month total is the sum of both halves. OT hours already stored for a
+ * row are preserved -- they are no longer entered from this summary grid.
  */
 function save_monthly_hours_summary(
     int $actorUserId,
     int $year,
-    array $hoursByUser,
-    array $otByUser
+    array $firstHalfByUser,
+    array $secondHalfByUser
 ): array {
     if ($year < 2000 || $year > 2100) {
         return ['ok' => false, 'error' => 'Select a valid summary year.'];
     }
 
-    if (!$hoursByUser) {
+    if (!$firstHalfByUser) {
         return ['ok' => false, 'error' => 'No monthly hours were submitted.'];
     }
 
@@ -135,18 +163,22 @@ function save_monthly_hours_summary(
     );
     $upsert = $pdo->prepare(
         'INSERT INTO sa_monthly_hours
-            (user_id, summary_year, summary_month, total_hours, ot_hours, updated_by)
+            (user_id, summary_year, summary_month, total_hours,
+             first_half_hours, second_half_hours, updated_by)
          VALUES
-            (:user_id, :summary_year, :summary_month, :total_hours, :ot_hours, :updated_by)
+            (:user_id, :summary_year, :summary_month, :total_hours,
+             :first_half_hours, :second_half_hours, :updated_by)
          ON DUPLICATE KEY UPDATE
             total_hours = VALUES(total_hours),
-            ot_hours = VALUES(ot_hours),
+            first_half_hours = VALUES(first_half_hours),
+            second_half_hours = VALUES(second_half_hours),
+            ot_hours = LEAST(ot_hours, VALUES(total_hours)),
             updated_by = VALUES(updated_by),
             updated_at = CURRENT_TIMESTAMP'
     );
 
     $validatedRows = [];
-    foreach ($hoursByUser as $rawUserId => $monthlyValues) {
+    foreach ($firstHalfByUser as $rawUserId => $monthlyValues) {
         $userId = filter_var($rawUserId, FILTER_VALIDATE_INT);
         if ($userId === false || $userId < 1 || !is_array($monthlyValues)) {
             return ['ok' => false, 'error' => 'Invalid Student Assistant entry in the summary.'];
@@ -158,20 +190,22 @@ function save_monthly_hours_summary(
         }
 
         for ($month = 1; $month <= 12; $month++) {
-            $rawHours = trim((string)($monthlyValues[$month] ?? ''));
-            $rawOt = trim((string)($otByUser[$userId][$month] ?? '0'));
-            $rawHours = str_replace(',', '.', $rawHours);
-            $rawOt = str_replace(',', '.', $rawOt);
+            $rawFirst = trim((string)($monthlyValues[$month] ?? ''));
+            $rawSecond = trim((string)($secondHalfByUser[$userId][$month] ?? '0'));
+            $rawFirst = str_replace(',', '.', $rawFirst);
+            $rawSecond = str_replace(',', '.', $rawSecond);
 
-            if ($rawHours === '' || !is_numeric($rawHours) || !is_numeric($rawOt)) {
-                return ['ok' => false, 'error' => "Enter valid total and OT hours for SA #{$userId}, month {$month}."];
+            if ($rawFirst === '' || $rawSecond === ''
+                || !is_numeric($rawFirst) || !is_numeric($rawSecond)) {
+                return ['ok' => false, 'error' => "Enter valid hours for SA #{$userId}, month {$month}."];
             }
 
-            $totalHours = (float)$rawHours;
-            $otHours = (float)$rawOt;
-            if (!is_finite($totalHours) || !is_finite($otHours)
-                || $totalHours < 0 || $otHours < 0 || $otHours > $totalHours
-                || $totalHours > 99999.99 || $otHours > 99999.99) {
+            $first = (float)$rawFirst;
+            $second = (float)$rawSecond;
+            $total = $first + $second;
+            if (!is_finite($first) || !is_finite($second) || !is_finite($total)
+                || $first < 0 || $second < 0
+                || $first > 99999.99 || $second > 99999.99 || $total > 99999.99) {
                 return ['ok' => false, 'error' => "Hours are outside the allowed range for SA #{$userId}, month {$month}."];
             }
 
@@ -179,8 +213,9 @@ function save_monthly_hours_summary(
                 'user_id' => $userId,
                 'summary_year' => $year,
                 'summary_month' => $month,
-                'total_hours' => number_format($totalHours, 2, '.', ''),
-                'ot_hours' => number_format($otHours, 2, '.', ''),
+                'total_hours' => number_format($total, 2, '.', ''),
+                'first_half_hours' => number_format($first, 2, '.', ''),
+                'second_half_hours' => number_format($second, 2, '.', ''),
                 'updated_by' => $actorUserId,
             ];
         }

@@ -6,7 +6,7 @@ The Student Assistant Hours Management System is a native PHP application using 
 
 - Student Assistants enter their registered student number on the public login page to view their hours summary. No SA password is required.
 - Head SAs sign in with their registered email or student number and password.
-- Head SAs maintain monthly total hours and a separate OT portion in **Reports → Annual Summary**. The monthly total includes OT.
+- Head SAs maintain monthly hours in **Reports → Annual Summary**, split into a 1-15 period and a 16-to-end-of-month period (28/29/30/31 depending on month and leap year). The month total is the sum of both halves; the existing OT values remain reported in the OT column.
 - Approved legacy DTR data is retained. Months without a manually entered summary continue to display approved historic DTR hours.
 - The public calculator defaults Time In to 08:00 (editable), deducts a one-hour break for shifts longer than eight hours, and counts OT after 17:00 in completed 30-minute blocks.
 - DTR upload, bulk-entry, and approval endpoints are retired; legacy DTR rows are not deleted.
@@ -32,6 +32,6 @@ The local VS Code configuration at `.vscode/sftp.json` contains deployment crede
 
 ## Data behavior
 
-`sa_monthly_hours` stores one row per SA, year, and month. Each monthly OT value must be between zero and that month's total. When a month has a manual row, it replaces that month's legacy DTR total in reports. Historic DTR rows remain untouched.
+`sa_monthly_hours` stores one row per SA, year, and month. Each month keeps `first_half_hours` (days 1-15), `second_half_hours` (days 16 to end of month) and `total_hours` (their sum). Existing `ot_hours` values are preserved and must stay between zero and the month total. When a month has a manual row, it replaces that month's legacy DTR total in reports. Historic DTR rows remain untouched.
 
 No live database migration or deployment is performed by this project setup.

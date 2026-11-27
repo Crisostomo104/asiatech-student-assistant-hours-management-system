@@ -864,13 +864,18 @@ $allCashouts = get_all_ot_cashouts();
                                         <p class="empty text-muted text-center py-4 mb-0">No Student Assistant records found.</p>
                                     <?php else: ?>
 
-                                        <div class="table-responsive">
+                                        <div class="table-responsive annual-summary-scroll">
                                             <table class="table table-sm table-bordered annual-hours-table align-middle mb-0">
                                                 <thead class="table-light">
                                                     <tr>
                                                         <th>Student Assistant</th>
-                                                        <?php foreach (['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] as $monthLabel): ?>
-                                                            <th><?= $monthLabel ?><small class="d-block fw-normal text-muted">Total / OT</small></th>
+                                                        <?php foreach (['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] as $index => $monthLabel): ?>
+                                                            <?php $headerEndDay = (int)date('t', mktime(0, 0, 0, $index + 1, 1, $selectedYear)); ?>
+                                                            <th>
+                                                                <?= $monthLabel ?>
+                                                                <small class="d-block fw-normal text-muted">1-15</small>
+                                                                <small class="d-block fw-normal text-muted">16-<?= $headerEndDay ?></small>
+                                                            </th>
                                                         <?php endforeach; ?>
                                                         <th>Total</th>
                                                         <th>OT</th>
@@ -903,24 +908,25 @@ $allCashouts = get_all_ot_cashouts();
                                                         </th>
                                                         <?php foreach ($monthKeys as $index => $mk):
                                                             $monthNumber = $index + 1;
-                                                            $monthTotal = (float)$row[$mk];
-                                                            $monthOt = (float)$row[$mk . '_ot'];
+                                                            $monthEndDay = (int)date('t', mktime(0, 0, 0, $monthNumber, 1, $selectedYear));
+                                                            $monthFirst = (float)($row[$mk . '_first'] ?? $row[$mk]);
+                                                            $monthSecond = (float)($row[$mk . '_second'] ?? 0);
                                                         ?>
                                                             <td>
                                                                 <div class="month-entry hide-on-print">
                                                                     <input type="number" min="0" max="99999.99" step="0.25"
-                                                                           class="form-control form-control-sm month-input"
-                                                                           name="hours[<?= $uid ?>][<?= $monthNumber ?>]"
-                                                                           aria-label="<?= htmlspecialchars($row['full_name'] . ' ' . ucfirst($mk) . ' total hours', ENT_QUOTES) ?>"
-                                                                           value="<?= number_format($monthTotal, 2, '.', '') ?>" required>
+                                                                           class="form-control form-control-sm month-input first-half-input"
+                                                                           name="first_half_hours[<?= $uid ?>][<?= $monthNumber ?>]"
+                                                                           aria-label="<?= htmlspecialchars($row['full_name'] . ' ' . ucfirst($mk) . ' hours for days 1-15', ENT_QUOTES) ?>"
+                                                                           value="<?= number_format($monthFirst, 2, '.', '') ?>" required>
                                                                     <input type="number" min="0" max="99999.99" step="0.25"
-                                                                           class="form-control form-control-sm month-input ot-input"
-                                                                           name="ot_hours[<?= $uid ?>][<?= $monthNumber ?>]"
-                                                                           aria-label="<?= htmlspecialchars($row['full_name'] . ' ' . ucfirst($mk) . ' OT hours', ENT_QUOTES) ?>"
-                                                                           value="<?= number_format($monthOt, 2, '.', '') ?>" required>
+                                                                           class="form-control form-control-sm month-input second-half-input"
+                                                                           name="second_half_hours[<?= $uid ?>][<?= $monthNumber ?>]"
+                                                                           aria-label="<?= htmlspecialchars($row['full_name'] . ' ' . ucfirst($mk) . ' hours for days 16-' . $monthEndDay, ENT_QUOTES) ?>"
+                                                                           value="<?= number_format($monthSecond, 2, '.', '') ?>" required>
                                                                 </div>
                                                                 <div class="d-none d-print-block">
-                                                                    <?= number_format($monthTotal, 1) ?> / <?= number_format($monthOt, 1) ?>
+                                                                    <?= number_format($monthFirst, 1) ?> / <?= number_format($monthSecond, 1) ?>
                                                                 </div>
                                                             </td>
                                                         <?php endforeach; ?>
@@ -932,7 +938,7 @@ $allCashouts = get_all_ot_cashouts();
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <p class="form-text mb-0 mt-2">Monthly Total includes OT. Enter OT separately as a portion of that month’s total.</p>
+                                        <p class="form-text mb-0 mt-2">Each month is split into a 1-15 period and a 16-end period. The month total is the sum of both halves; OT and Remaining are shown at the right.</p>
 
                                         <div class="grand-total-strip mt-2">
                                             <span>Advance: <?= number_format($totAdvance, 1) ?></span>

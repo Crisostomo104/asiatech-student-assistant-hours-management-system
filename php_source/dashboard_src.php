@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = save_monthly_hours_summary(
                 current_user_id(),
                 $year,
-                $_POST['hours'] ?? [],
-                $_POST['ot_hours'] ?? []
+                $_POST['first_half_hours'] ?? [],
+                $_POST['second_half_hours'] ?? []
             );
             if ($result['ok']) {
                 $message = 'Annual Hours Summary saved.';

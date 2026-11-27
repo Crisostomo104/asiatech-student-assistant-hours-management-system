@@ -49,15 +49,80 @@
                 #tab-reports .rpt-card .card-header h2{font-size:.95rem;font-weight:700;margin:0;}
                 #tab-reports .rpt-card .card-header .actions{display:flex;gap:.5rem;}
 
-                #tab-reports .annual-hours-table{min-width:1180px;}
+                /* Annual Hours Summary: compact enough to fit a 24" screen at
+                   125% zoom, with the identity column, header row and the
+                   Total/OT/Remaining block pinned while the grid scrolls. */
+                #tab-reports .annual-summary-scroll{
+                    max-height:min(72vh,900px);
+                    overflow:auto;
+                }
+                #tab-reports .annual-hours-table{
+                    --sa-col:160px; --total-col:65px; --ot-col:65px; --remaining-col:85px;
+                    min-width:0;
+                    width:100%;
+                    font-size:.78rem;
+                    border-collapse:separate;
+                    border-spacing:0;
+                }
                 #tab-reports .annual-hours-table th,
-                #tab-reports .annual-hours-table td{vertical-align:middle;text-align:center;}
+                #tab-reports .annual-hours-table td{
+                    vertical-align:middle;text-align:center;
+                    padding:.25rem .3rem;
+                    white-space:nowrap;
+                }
                 #tab-reports .annual-hours-table th:first-child,
-                #tab-reports .annual-hours-table td:first-child{text-align:left;min-width:175px;}
-                #tab-reports .annual-hours-table .month-input{width:4.7rem;min-width:4.7rem;}
-                #tab-reports .annual-hours-table .month-entry{display:flex;flex-direction:column;align-items:center;gap:.2rem;}
-                #tab-reports .annual-hours-table .ot-input{border-color:#e7c68a;background:#fffaf0;}
-                #tab-reports .advance-input{width:5.5rem;}
+                #tab-reports .annual-hours-table td:first-child{
+                    text-align:left;min-width:var(--sa-col);width:var(--sa-col);
+                }
+                #tab-reports .annual-hours-table .month-input{
+                    width:100%;min-width:0;height:1.9rem;
+                    padding:.15rem .2rem;font-size:.78rem;text-align:center;
+                }
+                #tab-reports .annual-hours-table .month-entry{
+                    display:flex;flex-direction:column;align-items:stretch;gap:.2rem;
+                    min-width:3.3rem;
+                }
+                #tab-reports .annual-hours-table .second-half-input{
+                    border-color:#e7c68a;background:#fffaf0;
+                }
+                #tab-reports .advance-input{width:4.5rem;}
+
+                /* Sticky header row */
+                #tab-reports .annual-hours-table > thead th{
+                    position:sticky;top:0;z-index:4;background:#f8f9fa;
+                }
+                /* Sticky identity column */
+                #tab-reports .annual-hours-table > thead th:first-child{left:0;z-index:6;}
+                #tab-reports .annual-hours-table > tbody th:first-child{
+                    position:sticky;left:0;z-index:3;background:#fff;
+                    box-shadow:2px 0 3px rgba(0,0,0,.06);
+                }
+                /* Sticky Total / OT / Remaining block */
+                #tab-reports .annual-hours-table > thead th:nth-last-child(-n+3),
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(-n+3){
+                    position:sticky;z-index:3;background:#fff;
+                }
+                #tab-reports .annual-hours-table > thead th:nth-last-child(-n+3){
+                    background:#f8f9fa;z-index:5;
+                }
+                #tab-reports .annual-hours-table > thead th:nth-last-child(3),
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(3){
+                    right:calc(var(--ot-col) + var(--remaining-col));
+                    width:var(--total-col);min-width:var(--total-col);
+                }
+                #tab-reports .annual-hours-table > thead th:nth-last-child(2),
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(2){
+                    right:var(--remaining-col);
+                    width:var(--ot-col);min-width:var(--ot-col);
+                }
+                #tab-reports .annual-hours-table > thead th:nth-last-child(1),
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(1){
+                    right:0;
+                    width:var(--remaining-col);min-width:var(--remaining-col);
+                }
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(3){
+                    box-shadow:-2px 0 3px rgba(0,0,0,.06);
+                }
 
                 #tab-reports .narrative-block{
                     background:#eef1fb;border-left:3px solid #3457d5;padding:1rem 1.15rem;
@@ -71,6 +136,12 @@
                 /* Print rules: only the active sub-panel + its print-target should show */
                 @media print{
                     #tab-reports .rpt-subnav, #tab-reports .rpt-filterbar, #tab-reports .hide-on-print{display:none !important;}
+                    #tab-reports .annual-summary-scroll{max-height:none !important;overflow:visible !important;}
+                    #tab-reports .annual-hours-table > thead th,
+                    #tab-reports .annual-hours-table > tbody th:first-child,
+                    #tab-reports .annual-hours-table > tbody td:nth-last-child(-n+3){
+                        position:static !important;box-shadow:none !important;
+                    }
                 }
 
                 .review-photo-row{min-height:480px;}
