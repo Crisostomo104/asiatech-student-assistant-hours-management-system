@@ -55,6 +55,12 @@
                 #tab-reports .annual-summary-scroll{
                     max-height:min(72vh,900px);
                     overflow:auto;
+                    scrollbar-width:none;
+                    -ms-overflow-style:none;
+                }
+                #tab-reports .annual-summary-scroll::-webkit-scrollbar,
+                #tab-reports .annual-summary-scroll::-webkit-scrollbar-thumb{
+                    width:0;height:0;background:transparent;
                 }
                 #tab-reports .annual-hours-table{
                     --sa-col:160px; --total-col:65px; --ot-col:65px; --remaining-col:85px;
@@ -122,6 +128,25 @@
                 }
                 #tab-reports .annual-hours-table > tbody td:nth-last-child(3){
                     box-shadow:-2px 0 3px rgba(0,0,0,.06);
+                }
+
+                /* Group highlights: entry area (Student Assistant + Jan-Dec) in
+                   soft green, computed Total/OT/Remaining block in soft gold. */
+                #tab-reports .annual-hours-table > thead tr > th:nth-child(-n+13){
+                    background:#e7f1ea;
+                }
+                #tab-reports .annual-hours-table > tbody tr > :nth-child(-n+13){
+                    background:#f3f8f5;
+                }
+                #tab-reports .annual-hours-table > thead tr > th:nth-last-child(-n+3){
+                    background:#ffedc9;
+                }
+                #tab-reports .annual-hours-table > tbody td:nth-last-child(-n+3){
+                    background:#fff8e9;
+                }
+                #tab-reports .annual-hours-table > thead tr > th:nth-child(13),
+                #tab-reports .annual-hours-table > tbody tr > td:nth-child(13){
+                    border-right:2px solid #e3c98d;
                 }
 
                 #tab-reports .narrative-block{
