@@ -228,13 +228,19 @@
                     text-align:right;padding-right:.35rem;
                 }
                 #tab-reports .av-table thead th{background:#e9edf1 !important;font-weight:700;}
-                #tab-reports .av-table th:first-child{width:14%;}
-                #tab-reports .av-table .av-name-cell{text-align:left;width:14%;word-break:normal;}
+                #tab-reports .av-table th:first-child,
+                #tab-reports .av-table .av-name-cell{width:10%;}
+                #tab-reports .av-table .av-name-cell{text-align:left;word-break:normal;}
+                #tab-reports .av-table th[colspan="2"]{width:6%;}
+                #tab-reports .av-table th[colspan="2"]:nth-last-child(2){width:12%;}
                 #tab-reports .av-table th:last-child,
-                                #tab-reports .av-table td:last-child{width:5%;}
-                #tab-reports .av-table th[colspan="2"]{width:9%;}
-                #tab-reports .av-table th[colspan="2"]:nth-last-child(2){width:14%;}
-                #tab-reports .av-table th[colspan="1"]:nth-child(2){width:4%;}
+                #tab-reports .av-table td:last-child{width:6%;}
+                #tab-reports .av-table .second-half-label{color:#0b5c34;font-weight:700;}
+                #tab-reports .av-table .av-second{color:#0b5c34;background:#f3f9f5;}
+                #tab-reports .av-table tbody td.av-first,
+                #tab-reports .av-table tbody td.av-second,
+                #tab-reports .av-table tbody td#avEarnTotal,
+                #tab-reports .av-table tbody td#avEarnLeave{text-align:right;}
                 #tab-reports .av-table tbody td:nth-last-child(2),
                 #tab-reports .av-table tbody td:nth-last-child(3){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
@@ -267,8 +273,8 @@
                     #tab-reports .av-form{padding:0;max-width:97%;margin:0 auto;}
                     #tab-reports .av-select,#tab-reports .av-other{display:none !important;}
                     #tab-reports .av-table th{background:#e9edf1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-                    #tab-reports .av-table{font-size:9px;}
-                    #tab-reports .av-table thead th{font-size:9px;white-space:nowrap;}
+                    #tab-reports .av-table{font-size:8px;}
+                    #tab-reports .av-table thead th{font-size:7px;white-space:nowrap;}
                     #tab-reports .av-table th,
                                         #tab-reports .av-table td{padding:.08rem .04rem;}
                     #tab-reports .av-rule{border-top:1px solid #000;}

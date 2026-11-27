@@ -1117,14 +1117,19 @@ $allCashouts = get_all_ot_cashouts();
                         }
                     }
                     $avSaData = [];
+                    $avAllMonthKeys = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
                     foreach ($annualSummaryReport as $avRow) {
-                        $avMonths = [];
-                        foreach (['may','jun','jul','aug','sep','oct','nov','dec'] as $avKey) {
-                            $avMonths[$avKey] = (float)($avRow[$avKey] ?? 0);
+                        $avFirst = []; $avSecond = []; $avMonths = [];
+                        foreach ($avAllMonthKeys as $avKey) {
+                            $avFirst[$avKey]  = (float)($avRow[$avKey . '_first'] ?? 0);
+                            $avSecond[$avKey] = (float)($avRow[$avKey . '_second'] ?? 0);
+                            $avMonths[$avKey] = $avFirst[$avKey] + $avSecond[$avKey];
                         }
                         $avSaData[(int)$avRow['user_id']] = [
                             'name'    => (string)$avRow['full_name'],
                             'advance' => (float)($avRow['advance_hrs'] ?? 0),
+                            'first'   => $avFirst,
+                            'second'  => $avSecond,
                             'months'  => $avMonths,
                         ];
                     }
@@ -1196,28 +1201,28 @@ $allCashouts = get_all_ot_cashouts();
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Name</th>
-                                                <th colspan="1">MAY</th>
-                                                <?php foreach (['JUN','JUL','AUG','SEP','OCT','NOV','DEC'] as $avMonthLabel): ?>
+                                                <?php foreach (['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] as $index => $avMonthLabel): ?>
+                                                    <?php $avEndDay = (int)date('t', mktime(0, 0, 0, $index + 1, 1, $selectedYear)); ?>
                                                     <th colspan="2"><?= $avMonthLabel ?></th>
                                                 <?php endforeach; ?>
                                                 <th colspan="2">Earning Time</th>
                                                 <th rowspan="2">Sig.</th>
                                             </tr>
                                             <tr>
-                                                <th>Abs.</th>
-                                                <?php for ($avI = 0; $avI < 7; $avI++): ?>
-                                                    <th>Hrs</th><th>Leave</th>
-                                                <?php endfor; ?>
+                                                <?php foreach (['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'] as $index => $avMonthKey): ?>
+                                                    <?php $avEndDay = (int)date('t', mktime(0, 0, 0, $index + 1, 1, $selectedYear)); ?>
+                                                    <th>1-15</th>
+                                                    <th class="second-half-label">16-<?= $avEndDay ?></th>
+                                                <?php endforeach; ?>
                                                 <th>Total</th><th>Leave</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td id="avRowName" class="av-name-cell"></td>
-                                                <td id="avMay"></td>
-                                                <?php foreach (['jun','jul','aug','sep','oct','nov','dec'] as $avMonthKey): ?>
-                                                    <td class="av-hrs" data-av-month="<?= $avMonthKey ?>"></td>
-                                                    <td class="av-leave"></td>
+                                                <?php foreach (['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'] as $avMonthKey): ?>
+                                                    <td class="av-first" data-av-first="<?= $avMonthKey ?>"></td>
+                                                    <td class="av-second" data-av-second="<?= $avMonthKey ?>"></td>
                                                 <?php endforeach; ?>
                                                 <td id="avEarnTotal" class="fw-bold"></td>
                                                 <td id="avEarnLeave"></td>
@@ -1274,14 +1279,18 @@ $allCashouts = get_all_ot_cashouts();
                             const advance = row ? row.advance : 0;
                             $('avAdvance').textContent = fmt(advance);
                             let sum = 0;
-                            document.querySelectorAll('.av-hrs').forEach((cell) => {
-                                const key = cell.getAttribute('data-av-month');
-                                const value = row ? (row.months[key] || 0) : 0;
+                            document.querySelectorAll('.av-first').forEach((cell) => {
+                                const key = cell.getAttribute('data-av-first');
+                                const value = row ? (row.first[key] || 0) : 0;
                                 cell.textContent = value > 0 ? fmt(value) : '';
                                 sum += value;
                             });
-                            $('avMay').textContent = row && row.months.may > 0 ? fmt(row.months.may) : '';
-                            sum += row ? (row.months.may || 0) : 0;
+                            document.querySelectorAll('.av-second').forEach((cell) => {
+                                const key = cell.getAttribute('data-av-second');
+                                const value = row ? (row.second[key] || 0) : 0;
+                                cell.textContent = value > 0 ? fmt(value) : '';
+                                sum += value;
+                            });
                             $('avEarnTotal').textContent = fmt(sum + advance);
                             $('avEarnLeave').textContent = fmt(advance);
                             $('avTotal').textContent = fmt(sum + advance);
