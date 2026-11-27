@@ -1143,6 +1143,11 @@ $allCashouts = get_all_ot_cashouts();
                             </div>
                             <div class="card-body">
                                 <div class="av-form" id="avForm">
+                                    <div class="av-document-head hide-on-print">
+                                        <div class="av-school">ASIATECH &middot; STUDENT ASSISTANT HOURS MANAGEMENT SYSTEM</div>
+                                        <div class="av-document-title">ADVANCE &amp; VOUCHER</div>
+                                        <div class="av-document-sub">STUDENT ASSISTANT MONITORING TIME RECORD</div>
+                                    </div>
                                     <div class="av-header">
                                         <div class="av-header-row">
                                             <span>Student Assistant</span>
@@ -1397,7 +1402,9 @@ function printSection(section) {
     let style = null;
     if (section === 'annual' || section === 'otregister') {
         style = document.createElement('style');
-        style.innerHTML = '@page { size: landscape; }';
+        style.innerHTML = section === 'annual'
+            ? '@page { size: landscape; }'
+            : '@page { size: portrait; margin: 12mm; }';
         document.head.appendChild(style);
     }
 
