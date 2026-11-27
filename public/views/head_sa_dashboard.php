@@ -1404,7 +1404,7 @@ function printSection(section) {
         style = document.createElement('style');
         style.innerHTML = section === 'annual'
             ? '@page { size: landscape; }'
-            : '@page { size: portrait; margin: 12mm; }';
+            : '@page { size: portrait; margin: 8mm; }';
         document.head.appendChild(style);
     }
 
