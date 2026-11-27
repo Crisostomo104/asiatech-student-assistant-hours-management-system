@@ -1284,7 +1284,7 @@ $allCashouts = get_all_ot_cashouts();
                             sum += row ? (row.months.may || 0) : 0;
                             $('avEarnTotal').textContent = fmt(sum + advance);
                             $('avEarnLeave').textContent = fmt(advance);
-                            $('avTotal').textContent = fmt(advance);
+                            $('avTotal').textContent = fmt(sum + advance);
                         }
                         function syncSemester() {
                             semPrint.textContent = sem.value;
