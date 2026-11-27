@@ -167,6 +167,7 @@
                     font-family:"Times New Roman",Times,serif;
                     font-size:17px;color:#000;background:#fff;
                     padding:1rem 1.25rem;
+                    max-width:1040px;margin:0 auto;
                     border:1px solid #b9c4bb;
                     box-shadow:inset 0 0 0 3px #fff, inset 0 0 0 4px #d9e2da;
                 }
@@ -256,13 +257,13 @@
                 @media print{
                     #tab-reports .rpt-subnav, #tab-reports .rpt-filterbar, #tab-reports .hide-on-print{display:none !important;}
                     #tab-reports .annual-summary-scroll{max-height:none !important;overflow:visible !important;}
-                    #tab-reports .av-form{padding:0;}
+                    #tab-reports .av-form{padding:0;max-width:97%;margin:0 auto;}
                     #tab-reports .av-select,#tab-reports .av-other{display:none !important;}
                     #tab-reports .av-table th{background:#e9edf1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-                    #tab-reports .av-table{font-size:13px;}
+                    #tab-reports .av-table{font-size:10px;}
                     #tab-reports .av-table thead th{font-size:9px;}
                     #tab-reports .av-table th,
-                    #tab-reports .av-table td{padding:.14rem .08rem;}
+                                        #tab-reports .av-table td{padding:.1rem .06rem;}
                     #tab-reports .av-rule{border-top:1px solid #000;}
                     #tab-reports .av-computation{background:none !important;}
                     #tab-reports .annual-hours-table > thead th,
