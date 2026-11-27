@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_POST['id_number'] ?? '',
             $fullName,
             $_POST['email'] ?? '',
-            $_POST['password'] ?? ''
         );
         $result['ok'] ? $message = 'Student Assistant account created.' : $error = $result['error'];
     } elseif ($action === 'toggle_active') {
@@ -105,11 +104,6 @@ $dueForReview = get_accounts_due_for_review();
                 <div class="col-md-4">
                     <label class="form-label" for="saEmail">Email <span class="text-danger" aria-hidden="true">*</span></label>
                     <input type="email" id="saEmail" name="email" class="form-control" autocomplete="email" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="saTemporaryPassword">Temporary Password <span class="text-danger" aria-hidden="true">*</span></label>
-                    <input type="password" id="saTemporaryPassword" name="password" class="form-control" minlength="10" autocomplete="new-password" required>
-                    <div class="form-text">At least 10 chars, 1 uppercase, 1 number. Share this with the SA to log in.</div>
                 </div>
                 <div class="col-12">
                     <label class="form-label" for="saFullNamePreview">Full Name Preview <span class="text-muted fw-normal">(surname first)</span></label>
