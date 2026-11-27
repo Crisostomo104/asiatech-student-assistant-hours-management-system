@@ -1149,9 +1149,10 @@ $allCashouts = get_all_ot_cashouts();
                                         <div class="av-document-sub">STUDENT ASSISTANT MONITORING TIME RECORD</div>
                                     </div>
                                     <div class="av-header">
+                                        <div class="av-date">Date: <?= date('M. d, Y') ?></div>
                                         <div class="av-header-row">
                                             <span>Student Assistant</span>
-                                            <span>
+                                            <span class="av-dept">
                                                 Department:
                                                 <select id="avDepartment" class="av-select d-print-none">
                                                     <?php foreach ($avDepartments as $avDept): ?>
@@ -1181,7 +1182,6 @@ $allCashouts = get_all_ot_cashouts();
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
-                                        <div class="av-date">Date: <?= date('M. d, Y') ?></div>
                                     </div>
 
                                     <div class="av-time-record">
@@ -1189,7 +1189,7 @@ $allCashouts = get_all_ot_cashouts();
                                         <div>Advance: <span id="avAdvance">0</span> Hrs</div>
                                         <div>Total: <span id="avTotal">0</span> Hrs</div>
                                     </div>
-                                    <hr class="av-rule">
+                                    <hr class="av-rule av-rule-double">
 
                                     <div class="av-table-title" id="avTableTitle">SA- MONITORING TIME <?= (int)$selectedYear ?>-<?= (int)$selectedYear + 1 ?> (1st Semester)</div>
                                     <table class="av-table">
@@ -1201,7 +1201,7 @@ $allCashouts = get_all_ot_cashouts();
                                                     <th colspan="2"><?= $avMonthLabel ?></th>
                                                 <?php endforeach; ?>
                                                 <th colspan="2">Earning Time</th>
-                                                <th rowspan="2">Remarks</th>
+                                                <th rowspan="2">Sig.</th>
                                             </tr>
                                             <tr>
                                                 <th>Absences</th>

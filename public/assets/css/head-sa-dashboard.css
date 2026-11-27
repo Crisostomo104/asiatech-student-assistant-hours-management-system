@@ -178,8 +178,9 @@
                 }
                 #tab-reports .av-document-sub{font-size:10px;letter-spacing:.1em;color:#555;}
                 #tab-reports .av-header-row{
-                    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+                    display:flex;justify-content:flex-start;gap:0;flex-wrap:nowrap;
                 }
+                #tab-reports .av-dept{margin-left:42%;}
                 #tab-reports .av-header-row > span{min-width:0;}
                 #tab-reports .av-select{
                     font-family:inherit;font-size:12px;border:1px solid #888;border-radius:0;
@@ -200,7 +201,15 @@
                 #tab-reports .av-time-record strong{display:block;margin-bottom:.2rem;}
                 #tab-reports .av-time-record div{margin-left:1rem;}
                 #tab-reports .av-rule{border:0;border-top:1px solid #000;margin:.4rem 0 .6rem;}
-                #tab-reports .av-table-title{text-align:center;font-weight:700;margin-bottom:.35rem;}
+                #tab-reports .av-rule-double{
+                    border-top:1px solid #000;border-bottom:1px solid #000;
+                    height:3px;background:transparent;margin:.5rem 0 .7rem;
+                }
+                #tab-reports .av-table-title{
+                    text-align:center;font-weight:700;margin-bottom:0;
+                    background:#e9edf1;border:1px solid #000;border-bottom:0;
+                    padding:.2rem;
+                }
                 #tab-reports .av-table{
                     width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px;
                     border:2px solid #000;
@@ -211,16 +220,21 @@
                     vertical-align:middle;background:#fff;
                 }
                 #tab-reports .av-table thead th{background:#e9edf1 !important;font-weight:700;}
-                #tab-reports .av-table th:first-child{width:13%;}
-                #tab-reports .av-table .av-name-cell{text-align:left;width:13%;word-break:normal;}
+                #tab-reports .av-table th:first-child{width:18%;}
+                #tab-reports .av-table .av-name-cell{text-align:left;width:18%;word-break:normal;}
+                #tab-reports .av-table th:last-child,
+                #tab-reports .av-table td:last-child{width:4%;}
                 #tab-reports .av-table tbody td:nth-last-child(2),
                 #tab-reports .av-table tbody td:nth-last-child(3){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
-                    display:flex;gap:2rem;align-items:flex-end;margin-top:1.5rem;
+                    display:flex;gap:5%;align-items:flex-start;margin-top:1.2rem;
+                    border-top:1px solid #000;padding-top:.8rem;
                 }
-                #tab-reports .av-signatures{flex:1 1 55%;}
+                #tab-reports .av-signatures{
+                    flex:1 1 55%;display:flex;flex-direction:column;gap:.6rem;
+                }
                 #tab-reports .av-signature,#tab-reports .av-approval{
-                    position:relative;display:inline-block;min-width:170px;margin-right:2rem;
+                    position:relative;display:block;min-width:170px;max-width:190px;
                 }
                 #tab-reports .av-signature-line{
                     border-bottom:1px solid #000;height:34px;margin-bottom:2px;
@@ -229,8 +243,8 @@
                     position:absolute;right:0;bottom:18px;font-size:11px;
                 }
                 #tab-reports .av-computation{
-                    min-height:130px;border:2px solid #000;
-                    background:repeating-linear-gradient(to bottom, transparent 0, transparent 23px, #d6d6d6 24px);
+                    flex:0 0 35%;min-height:130px;border:2px solid #000;
+                    margin-right:8%;background:#fff;
                     display:flex;justify-content:center;align-items:flex-start;
                     padding:.3rem;
                 }
