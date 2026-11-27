@@ -874,7 +874,7 @@ $allCashouts = get_all_ot_cashouts();
                                                             <th>
                                                                 <?= $monthLabel ?>
                                                                 <small class="d-block fw-normal text-muted">1-15</small>
-                                                                <small class="d-block fw-normal text-muted">16-<?= $headerEndDay ?></small>
+                                                                <small class="d-block second-half-label">16-<?= $headerEndDay ?></small>
                                                             </th>
                                                         <?php endforeach; ?>
                                                         <th>Total</th>
