@@ -73,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 current_user_id(),
                 $_POST['id_number'] ?? '',
                 $fullName,
-                $_POST['email'] ?? '',
-                $_POST['password'] ?? ''
+                $_POST['email'] ?? ''
             );
             $result['ok'] ? $message = 'Student Assistant account created.' : $error = $result['error'];
             $activeTabOverride = 'tab-managesas';

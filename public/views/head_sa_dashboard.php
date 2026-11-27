@@ -555,11 +555,6 @@ $allCashouts = get_all_ot_cashouts();
                                 <label class="form-label" for="saEmail">Email <span class="text-danger" aria-hidden="true">*</span></label>
                                 <input type="email" id="saEmail" name="email" class="form-control" autocomplete="email" required>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label" for="saTemporaryPassword">Temporary Password <span class="text-danger" aria-hidden="true">*</span></label>
-                                <input type="password" id="saTemporaryPassword" name="password" class="form-control" minlength="10" autocomplete="new-password" required>
-                                <div class="form-text">At least 10 chars, 1 uppercase, 1 number.</div>
-                            </div>
                             <div class="col-12">
                                 <label class="form-label" for="saFullNamePreview">Full Name Preview <span class="text-muted fw-normal">(surname first)</span></label>
                                 <output id="saFullNamePreview" class="form-control bg-light fw-semibold" data-full-name-preview aria-live="polite">Start typing a name to preview.</output>
@@ -1113,126 +1108,192 @@ $allCashouts = get_all_ot_cashouts();
                     <!-- END CUT-OFF + DUTY -->
                     <?php endif; ?>
 
-                    <!-- ================= OT CASHOUTS (narrative + tabular) ================= -->
+                    <!-- ================= ADVANCE & VOUCHER (print-ready) ================= -->
+                    <?php
+                    $avActiveSas = [];
+                    foreach (($allSaListForManage ?? []) as $avSa) {
+                        if ((int)$avSa['is_active'] === 1) {
+                            $avActiveSas[] = $avSa;
+                        }
+                    }
+                    $avSaData = [];
+                    foreach ($annualSummaryReport as $avRow) {
+                        $avMonths = [];
+                        foreach (['may','jun','jul','aug','sep','oct','nov','dec'] as $avKey) {
+                            $avMonths[$avKey] = (float)($avRow[$avKey] ?? 0);
+                        }
+                        $avSaData[(int)$avRow['user_id']] = [
+                            'name'    => (string)$avRow['full_name'],
+                            'advance' => (float)($avRow['advance_hrs'] ?? 0),
+                            'months'  => $avMonths,
+                        ];
+                    }
+                    $avSemesters = ['1st Semester', '2nd Semester'];
+                    $avDepartments = ['IT Dept.', 'Library', 'Custodian', 'Kinder', 'Other'];
+                    ?>
                     <div class="tab-pane fade" id="rpt-cashouts" role="tabpanel">
-
                         <div class="card rpt-card print-otregister mb-3">
                             <div class="card-header">
-                                <h2>Annual OT Summary — <?= (int)$selectedYear ?></h2>
+                                <h2>Advance &amp; Voucher</h2>
                                 <div class="actions hide-on-print">
                                     <button type="button" class="btn btn-dark btn-sm" onclick="printSection('otregister')">
-                                        <i class="bi bi-printer"></i> Print OT Summary
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body table-responsive">
-                                <table class="table table-sm table-bordered align-middle text-center mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th class="text-start">Student Assistant</th>
-                                            <?php foreach (['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] as $monthLabel): ?>
-                                                <th><?= $monthLabel ?></th>
-                                            <?php endforeach; ?>
-                                            <th>Total OT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $otRegisterTotal = 0.0;
-                                        $otRegisterRows = 0;
-                                        foreach ($annualSummaryReport as $otRow):
-                                            if (empty($otRow['has_manual_hours'])) {
-                                                continue;
-                                            }
-                                            $otRegisterRows++;
-                                            $otRegisterTotal += (float)$otRow['ot_hrs'];
-                                        ?>
-                                            <tr>
-                                                <th class="text-start">
-                                                    <?= htmlspecialchars($otRow['full_name'], ENT_QUOTES) ?>
-                                                    <small class="d-block text-muted"><?= htmlspecialchars($otRow['id_number'], ENT_QUOTES) ?></small>
-                                                </th>
-                                                <?php foreach (['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'] as $monthKey): ?>
-                                                    <td><?= number_format((float)$otRow[$monthKey . '_ot'], 1) ?></td>
-                                                <?php endforeach; ?>
-                                                <td class="fw-bold"><?= number_format((float)$otRow['ot_hrs'], 1) ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                        <?php if ($otRegisterRows === 0): ?>
-                                            <tr><td colspan="14" class="text-muted py-3">No new monthly OT entries for this year yet.</td></tr>
-                                        <?php else: ?>
-                                            <tr class="table-light fw-bold">
-                                                <td colspan="13" class="text-end">Total OT</td>
-                                                <td><?= number_format($otRegisterTotal, 1) ?></td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="card rpt-card print-narrative mb-3">
-                            <div class="card-header">
-                                <h2>Narrative Summary</h2>
-                                <div class="actions hide-on-print">
-                                    <button type="button" class="btn btn-dark btn-sm" onclick="printSection('narrative')">
-                                        <i class="bi bi-printer"></i> Print
+                                        <i class="bi bi-printer"></i> Print Form
                                     </button>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <?php
-                                $allCashouts = get_all_ot_cashouts();
-                                $narrative = generate_humanized_narrative_report($allCashouts);
-                                ?>
-                                <div class="narrative-block"><?= $narrative ?></div>
-                            </div>
-                        </div>
+                                <div class="av-form" id="avForm">
+                                    <div class="av-header">
+                                        <div class="av-header-row">
+                                            <span>Student Assistant</span>
+                                            <span>
+                                                Department:
+                                                <select id="avDepartment" class="av-select d-print-none">
+                                                    <?php foreach ($avDepartments as $avDept): ?>
+                                                        <option value="<?= htmlspecialchars($avDept, ENT_QUOTES) ?>"><?= htmlspecialchars($avDept, ENT_QUOTES) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <input type="text" id="avDepartmentOther" class="av-other d-print-none" placeholder="Specify" hidden>
+                                                <span id="avDepartmentPrint" class="d-none d-print-inline"></span>
+                                            </span>
+                                        </div>
+                                        <div>A.Y: <span id="avSchoolYear"><?= (int)$selectedYear ?> - <?= (int)$selectedYear + 1 ?></span> (<span id="avSemesterPrint">1st Semester</span>)</div>
+                                        <div>
+                                            Name:
+                                            <select id="avSaName" class="av-select d-print-none">
+                                                <option value="">-- Select Student Assistant --</option>
+                                                <?php foreach ($avActiveSas as $avSa): ?>
+                                                    <option value="<?= (int)$avSa['user_id'] ?>"><?= htmlspecialchars($avSa['full_name'], ENT_QUOTES) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <span id="avSaNamePrint" class="d-none d-print-inline"></span>
+                                        </div>
+                                        <div class="av-semester hide-on-print">
+                                            Semester:
+                                            <select id="avSemester" class="av-select">
+                                                <?php foreach ($avSemesters as $avSem): ?>
+                                                    <option value="<?= htmlspecialchars($avSem, ENT_QUOTES) ?>"><?= htmlspecialchars($avSem, ENT_QUOTES) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="av-date">Date: <?= date('M. d, Y') ?></div>
+                                    </div>
 
-                        <div class="card rpt-card print-tabular">
-                            <div class="card-header">
-                                <h2>Legacy OT Cashouts</h2>
-                                <div class="actions hide-on-print">
-                                    <button type="button" class="btn btn-dark btn-sm" onclick="printSection('tabular')">
-                                        <i class="bi bi-printer"></i> Print
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <table class="table table-sm table-striped m-0" id="ot-reports-table">
-                                    <thead><tr><th>ID</th><th>Student</th><th>Hours</th><th>Requested</th><th>Status</th><th>Resolved By</th><th>Print</th></tr></thead>
-                                    <tbody>
-                                        <?php foreach ($allCashouts as $c): ?>
+                                    <div class="av-time-record">
+                                        <strong>Time Record:</strong>
+                                        <div>Advance: <span id="avAdvance">0</span> Hrs</div>
+                                        <div>Total: <span id="avTotal">0</span> Hrs</div>
+                                    </div>
+                                    <hr class="av-rule">
+
+                                    <div class="av-table-title" id="avTableTitle">SA- MONITORING TIME <?= (int)$selectedYear ?>-<?= (int)$selectedYear + 1 ?> (1st Semester)</div>
+                                    <table class="av-table">
+                                        <thead>
                                             <tr>
-                                                <td>#<?= $c['cashout_id'] ?></td>
-                                                <td><?= htmlspecialchars($c['full_name'], ENT_QUOTES) ?></td>
-                                                <td><?= htmlspecialchars((string)$c['hours_requested'], ENT_QUOTES) ?></td>
-                                                <td><?= htmlspecialchars(date('M d, Y h:i A', strtotime($c['requested_at'])), ENT_QUOTES) ?></td>
-                                                <td>
-                                                    <?php if ($c['status'] === 'approved'): ?>
-                                                        <span class="badge bg-success">Approved</span>
-                                                    <?php elseif ($c['status'] === 'rejected'): ?>
-                                                        <span class="badge bg-danger">Rejected</span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-warning text-dark">Pending</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td><?= htmlspecialchars($c['resolved_by_name'] ?? '-', ENT_QUOTES) ?></td>
-                                                <td>
-                                                    <div class="d-flex gap-1 hide-on-print">
-                                                        <?php if ($c['status'] === 'approved'): ?>
-                                                            <button class="btn btn-primary btn-sm py-0" onclick="printVoucher('<?= $c['cashout_id'] ?>')">Print Voucher</button>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
+                                                <th rowspan="2">Name</th>
+                                                <th colspan="1">MAY</th>
+                                                <?php foreach (['JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'] as $avMonthLabel): ?>
+                                                    <th colspan="2"><?= $avMonthLabel ?></th>
+                                                <?php endforeach; ?>
+                                                <th colspan="2">Earning Time</th>
+                                                <th rowspan="2">Remarks</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                            <tr>
+                                                <th>Absences</th>
+                                                <?php for ($avI = 0; $avI < 7; $avI++): ?>
+                                                    <th>Hrs</th><th>Leave</th>
+                                                <?php endfor; ?>
+                                                <th>Total</th><th>Leave</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="avRowName" class="av-name-cell"></td>
+                                                <td id="avMay"></td>
+                                                <?php foreach (['jun','jul','aug','sep','oct','nov','dec'] as $avMonthKey): ?>
+                                                    <td class="av-hrs" data-av-month="<?= $avMonthKey ?>"></td>
+                                                    <td class="av-leave"></td>
+                                                <?php endforeach; ?>
+                                                <td id="avEarnTotal" class="fw-bold"></td>
+                                                <td id="avEarnLeave"></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="av-bottom">
+                                        <div class="av-signatures">
+                                            <div class="av-signature">
+                                                <div class="av-signature-line"></div>
+                                                <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Head SA', ENT_QUOTES) ?></strong><br>
+                                                <span>SA Adviser</span>
+                                                <span class="av-signature-date"><?= date('m/d/y') ?></span>
+                                            </div>
+                                            <div class="av-approval">
+                                                <div class="av-signature-line"></div>
+                                                <span>Checked by:</span>
+                                            </div>
+                                            <div class="av-approval">
+                                                <div class="av-signature-line"></div>
+                                                <span>Noted By:</span>
+                                            </div>
+                                        </div>
+                                        <div class="av-computation">
+                                            <strong>Computation</strong>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- END OT CASHOUTS -->
+                    <script>
+                    (function () {
+                        const saData = <?= json_encode($avSaData, JSON_UNESCAPED_SLASHES) ?>;
+                        const semesters = <?= json_encode($avSemesters, JSON_UNESCAPED_SLASHES) ?>;
+                        const $ = (id) => document.getElementById(id);
+                        const dept = $('avDepartment'), deptOther = $('avDepartmentOther'), deptPrint = $('avDepartmentPrint');
+                        const name = $('avSaName'), namePrint = $('avSaNamePrint');
+                        const sem = $('avSemester'), semPrint = $('avSemesterPrint');
+                        const sy = '<?= (int)$selectedYear ?> - <?= (int)$selectedYear + 1 ?>';
+                        const fmt = (n) => (Math.round((Number(n) || 0) * 100) / 100).toFixed(2).replace(/\.00$/, '');
+
+                        function syncDept() {
+                            const value = dept.value;
+                            deptOther.hidden = value !== 'Other';
+                            deptPrint.textContent = value === 'Other' ? (deptOther.value.trim() || '') : value;
+                        }
+                        function syncName() {
+                            const row = saData[name.value];
+                            namePrint.textContent = row ? row.name : '';
+                            $('avRowName').textContent = row ? row.name : '';
+                            const advance = row ? row.advance : 0;
+                            $('avAdvance').textContent = fmt(advance);
+                            let sum = 0;
+                            document.querySelectorAll('.av-hrs').forEach((cell) => {
+                                const key = cell.getAttribute('data-av-month');
+                                const value = row ? (row.months[key] || 0) : 0;
+                                cell.textContent = value > 0 ? fmt(value) : '';
+                                sum += value;
+                            });
+                            $('avMay').textContent = row && row.months.may > 0 ? fmt(row.months.may) : '';
+                            sum += row ? (row.months.may || 0) : 0;
+                            $('avEarnTotal').textContent = fmt(sum + advance);
+                            $('avEarnLeave').textContent = fmt(advance);
+                            $('avTotal').textContent = fmt(advance);
+                        }
+                        function syncSemester() {
+                            semPrint.textContent = sem.value;
+                            $('avTableTitle').textContent = 'SA- MONITORING TIME ' + sy + ' (' + sem.value + ')';
+                        }
+                        dept.addEventListener('change', syncDept);
+                        deptOther.addEventListener('input', syncDept);
+                        name.addEventListener('change', syncName);
+                        sem.addEventListener('change', syncSemester);
+                        if (name.options.length > 1) name.selectedIndex = 1;
+                        syncDept(); syncName(); syncSemester();
+                    })();
+                    </script>
+                    <!-- END ADVANCE & VOUCHER -->
 
                 </div><!-- end inner tab-content -->
             </div>

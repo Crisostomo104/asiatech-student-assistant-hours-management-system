@@ -65,17 +65,21 @@ function verify_csrf(): void
 // ------------------------------------------------------------
 // Registration
 // ------------------------------------------------------------
-function register_user(string $idNumber, string $fullName, string $email, string $password, string $role = 'student_assistant'): array
+function register_user(string $idNumber, string $fullName, string $email, ?string $password, string $role = 'student_assistant'): array
 {
     $idNumber = trim($idNumber);
     $fullName = trim($fullName);
     $email    = trim(strtolower($email));
 
-    if (strlen($password) < 10) {
-        return ['ok' => false, 'error' => 'Password must be at least 10 characters long.'];
-    }
-    if (!preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
-        return ['ok' => false, 'error' => 'Password must include at least one uppercase letter and one number.'];
+    // Student accounts no longer need a password. Keep the NOT NULL column
+    // filled with a hash of random bytes that nobody can type or recover.
+    if ($password !== null && $password !== '') {
+        if (strlen($password) < 10) {
+            return ['ok' => false, 'error' => 'Password must be at least 10 characters long.'];
+        }
+        if (!preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+            return ['ok' => false, 'error' => 'Password must include at least one uppercase letter and one number.'];
+        }
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return ['ok' => false, 'error' => 'Invalid email address.'];
@@ -92,7 +96,9 @@ function register_user(string $idNumber, string $fullName, string $email, string
         return ['ok' => false, 'error' => 'An account with that ID number or email already exists.'];
     }
 
-    $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+    $hash = $password === null || $password === ''
+        ? password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT, ['cost' => 12])
+        : password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
     $insert = $pdo->prepare(
         'INSERT INTO users (id_number, full_name, email, password_hash, role, required_hours) VALUES (:id, :name, :email, :hash, :role, :reqhrs)'

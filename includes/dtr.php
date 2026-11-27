@@ -93,7 +93,7 @@ function normalize_sa_name_part(string $part): string
 }
 
 /** Head SA creates a new SA account directly (alternative to public self-registration). */
-function head_sa_create_sa(int $headSaId, string $idNumber, string $fullName, string $email, string $password): array
+function head_sa_create_sa(int $headSaId, string $idNumber, string $fullName, string $email): array
 {
     $idNumber = function_exists('mb_strtoupper')
         ? mb_strtoupper(trim($idNumber), 'UTF-8')
@@ -104,7 +104,7 @@ function head_sa_create_sa(int $headSaId, string $idNumber, string $fullName, st
         return ['ok' => false, 'error' => 'Enter the Student Assistant name.'];
     }
 
-    $result = register_user($idNumber, $fullName, $email, $password, 'student_assistant');
+    $result = register_user($idNumber, $fullName, $email, null, 'student_assistant');
     if (!$result['ok']) {
         return $result;
     }
