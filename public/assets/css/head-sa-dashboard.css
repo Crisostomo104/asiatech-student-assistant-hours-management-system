@@ -150,7 +150,7 @@
                 }
 
                 /* Alternating row colors; opaque so sticky cells stay readable. */
-                #tab-reports .annual-hours-table > tbody tr:nth-child(even) > *{background:#f3f7f4;}
+                #tab-reports .annual-hours-table > tbody tr:nth-child(even) > *{background:#e7f0ea;}
                 #tab-reports .annual-hours-table > tbody tr:nth-child(odd) > *{background:#fff;}
 
                 #tab-reports .narrative-block{
