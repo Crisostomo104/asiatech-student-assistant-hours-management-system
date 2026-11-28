@@ -115,7 +115,7 @@ $bgPhotos = [
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="images/png" href="/sahms/images/asiatech_logo.jpeg">
     
-    <link href="/sahms/public/assets/css/login.css?v=20261129i" rel="stylesheet">
+    <link href="/sahms/public/assets/css/login.css?v=20261129j" rel="stylesheet">
 </head>
 <body>
 
@@ -194,11 +194,11 @@ $bgPhotos = [
                                     <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Open My Hours
                                 </button>
                             </div>
-                            <div class="sa-logout-row">
-                                <a href="/sahms/logout" class="sa-logout-link">
-                                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>Log out
-                                </a>
-                            </div>
+                        </div>
+                        <div class="sa-logout-row">
+                            <a href="/sahms/logout" class="sa-logout-link">
+                                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>Log out
+                            </a>
                         </div>
                     <?php elseif ($headIdentifier !== null): ?>
                         <form method="post" novalidate>

@@ -570,7 +570,7 @@
         }
 /* Verified SA account panel: only shown after a successful student-number lookup. */
 .verified-sa-hours{
-    display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
     border:1px solid rgba(11,92,52,.25);border-radius:.5rem;
     background:rgba(11,92,52,.05);padding:.65rem .8rem;margin-bottom:1rem;
 }
@@ -579,7 +579,7 @@
 .verified-sa-id{font-size:.8rem;color:#6c757d;}
 
 /* Logout text link sits below the verified SA panel, outside the action row. */
-.sa-logout-row{flex:0 0 100%;width:100%;margin-top:.15rem;text-align:center;}
+.sa-logout-row{margin-top:.5rem;text-align:center;}
 .sa-logout-link{
     display:inline-flex;align-items:center;gap:.35rem;
     font-size:.8rem;font-weight:700;letter-spacing:.01em;
