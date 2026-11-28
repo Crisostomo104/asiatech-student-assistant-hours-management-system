@@ -1128,6 +1128,7 @@ $allCashouts = get_all_ot_cashouts();
                         $avSaData[(int)$avRow['user_id']] = [
                             'name'    => (string)$avRow['full_name'],
                             'advance' => (float)($avRow['advance_hrs'] ?? 0),
+                            'ot'      => (float)($avRow['ot_hrs'] ?? 0),
                             'first'   => $avFirst,
                             'second'  => $avSecond,
                             'months'  => $avMonths,
@@ -1213,7 +1214,7 @@ $allCashouts = get_all_ot_cashouts();
                                                     <th>1-15</th>
                                                     <th class="second-half-label">16-<?= $avEndDay ?></th>
                                                 <?php endforeach; ?>
-                                                <th>Total</th><th>Leave</th>
+                                                <th>Total</th><th>OT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1290,7 +1291,7 @@ $allCashouts = get_all_ot_cashouts();
                                 sum += value;
                             });
                             $('avEarnTotal').textContent = fmt(sum + advance);
-                            $('avEarnLeave').textContent = fmt(advance);
+                            $('avEarnLeave').textContent = fmt(row ? (row.ot || 0) : 0);
                             $('avTotal').textContent = fmt(sum + advance);
                         }
                         function syncSemester() {

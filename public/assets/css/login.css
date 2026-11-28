@@ -568,3 +568,12 @@
                 display: none;
             }
         }
+/* Verified SA account panel: only shown after a successful student-number lookup. */
+.verified-sa-hours{
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    border:1px solid rgba(11,92,52,.25);border-radius:.5rem;
+    background:rgba(11,92,52,.05);padding:.65rem .8rem;margin-bottom:1rem;
+}
+.verified-sa-identity{display:flex;flex-direction:column;min-width:0;}
+.verified-sa-name{font-weight:700;color:#0b5c34;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.verified-sa-id{font-size:.8rem;color:#6c757d;}

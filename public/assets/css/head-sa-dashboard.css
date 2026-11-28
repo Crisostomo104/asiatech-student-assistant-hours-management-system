@@ -53,8 +53,8 @@
                    125% zoom, with the identity column, header row and the
                    Total/OT/Remaining block pinned while the grid scrolls. */
                 #tab-reports .annual-summary-scroll{
-                    max-height:min(72vh,900px);
-                    overflow:auto;
+                    max-height:none;
+                    overflow:visible;
                     scrollbar-width:none;
                     -ms-overflow-style:none;
                 }
@@ -220,13 +220,6 @@
                     border:1px solid #000;padding:.28rem .22rem;text-align:center;
                     vertical-align:middle;background:#fff;
                 }
-                #tab-reports .av-table tbody td.av-hrs,
-                #tab-reports .av-table tbody td.av-leave,
-                #tab-reports .av-table tbody td#avMay,
-                #tab-reports .av-table tbody td#avEarnTotal,
-                #tab-reports .av-table tbody td#avEarnLeave{
-                    text-align:right;padding-right:.35rem;
-                }
                 #tab-reports .av-table thead th{background:#e9edf1 !important;font-weight:700;}
                 #tab-reports .av-table th:first-child,
                 #tab-reports .av-table .av-name-cell{width:10%;}
@@ -235,10 +228,6 @@
                 #tab-reports .av-table th[colspan="2"]:last-child{width:12%;}
                 #tab-reports .av-table .second-half-label{color:#0b5c34;font-weight:700;}
                 #tab-reports .av-table .av-second{color:#0b5c34;background:#f3f9f5;}
-                #tab-reports .av-table tbody td.av-first,
-                #tab-reports .av-table tbody td.av-second,
-                #tab-reports .av-table tbody td#avEarnTotal,
-                #tab-reports .av-table tbody td#avEarnLeave{text-align:right;}
                 #tab-reports .av-table tbody td:nth-last-child(-n+2){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
                     display:flex;gap:5%;align-items:flex-start;margin-top:.6rem;

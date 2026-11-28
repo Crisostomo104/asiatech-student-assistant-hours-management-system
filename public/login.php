@@ -99,7 +99,7 @@ $bgPhotos = [
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="images/png" href="/sahms/images/asiatech_logo.jpeg">
     
-    <link href="/sahms/public/assets/css/login.css" rel="stylesheet">
+    <link href="/sahms/public/assets/css/login.css?v=20261128q" rel="stylesheet">
 </head>
 <body>
 
@@ -168,8 +168,14 @@ $bgPhotos = [
                     <?php endif; ?>
 
                     <?php if ($studentSummary): ?>
-                        <div class="alert alert-info py-2">
-                            Summary for <?= htmlspecialchars((string)$summaryYear, ENT_QUOTES) ?> is ready. Close this page when finished.
+                        <div class="verified-sa-hours" role="group" aria-label="Verified student assistant">
+                            <div class="verified-sa-identity">
+                                <span class="verified-sa-name"><?= htmlspecialchars((string)$studentSummary['full_name'], ENT_QUOTES) ?></span>
+                                <span class="verified-sa-id"><?= htmlspecialchars((string)$studentSummary['id_number'], ENT_QUOTES) ?></span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentHoursModal">
+                                <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Open My Hours
+                            </button>
                         </div>
                     <?php elseif ($headIdentifier !== null): ?>
                         <form method="post" novalidate>
