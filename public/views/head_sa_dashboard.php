@@ -1206,7 +1206,6 @@ $allCashouts = get_all_ot_cashouts();
                                                     <th colspan="2"><?= $avMonthLabel ?></th>
                                                 <?php endforeach; ?>
                                                 <th colspan="2">Earning Time</th>
-                                                <th rowspan="2">Sig.</th>
                                             </tr>
                                             <tr>
                                                 <?php foreach (['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'] as $index => $avMonthKey): ?>
@@ -1226,7 +1225,6 @@ $allCashouts = get_all_ot_cashouts();
                                                 <?php endforeach; ?>
                                                 <td id="avEarnTotal" class="fw-bold"></td>
                                                 <td id="avEarnLeave"></td>
-                                                <td></td>
                                             </tr>
                                         </tbody>
                                     </table>

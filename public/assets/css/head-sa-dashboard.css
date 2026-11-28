@@ -232,17 +232,14 @@
                 #tab-reports .av-table .av-name-cell{width:10%;}
                 #tab-reports .av-table .av-name-cell{text-align:left;word-break:normal;}
                 #tab-reports .av-table th[colspan="2"]{width:6%;}
-                #tab-reports .av-table th[colspan="2"]:nth-last-child(2){width:12%;}
-                #tab-reports .av-table th:last-child,
-                #tab-reports .av-table td:last-child{width:6%;}
+                #tab-reports .av-table th[colspan="2"]:last-child{width:12%;}
                 #tab-reports .av-table .second-half-label{color:#0b5c34;font-weight:700;}
                 #tab-reports .av-table .av-second{color:#0b5c34;background:#f3f9f5;}
                 #tab-reports .av-table tbody td.av-first,
                 #tab-reports .av-table tbody td.av-second,
                 #tab-reports .av-table tbody td#avEarnTotal,
                 #tab-reports .av-table tbody td#avEarnLeave{text-align:right;}
-                #tab-reports .av-table tbody td:nth-last-child(2),
-                #tab-reports .av-table tbody td:nth-last-child(3){background:#f2f7f3 !important;}
+                #tab-reports .av-table tbody td:nth-last-child(-n+2){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
                     display:flex;gap:5%;align-items:flex-start;margin-top:.6rem;
                     border-top:1px solid #000;padding-top:.4rem;
