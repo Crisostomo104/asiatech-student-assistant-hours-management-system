@@ -577,3 +577,13 @@
 .verified-sa-identity{display:flex;flex-direction:column;min-width:0;}
 .verified-sa-name{font-weight:700;color:#0b5c34;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .verified-sa-id{font-size:.8rem;color:#6c757d;}
+
+/* Logout text link sits below the verified SA panel, outside the action row. */
+.sa-logout-row{margin-top:.55rem;text-align:right;}
+.sa-logout-link{
+    display:inline-flex;align-items:center;gap:.35rem;
+    font-size:.8rem;font-weight:700;letter-spacing:.01em;
+    color:#0b5c34;text-decoration:none;
+    border-bottom:1px solid rgba(11,92,52,.4);padding-bottom:1px;
+}
+.sa-logout-link:hover,.sa-logout-link:focus{color:#073c22;border-bottom-color:#073c22;}

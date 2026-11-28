@@ -115,7 +115,7 @@ $bgPhotos = [
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="icon" type="images/png" href="/sahms/images/asiatech_logo.jpeg">
     
-    <link href="/sahms/public/assets/css/login.css?v=20261128q" rel="stylesheet">
+    <link href="/sahms/public/assets/css/login.css?v=20261128r" rel="stylesheet">
 </head>
 <body>
 
@@ -189,12 +189,14 @@ $bgPhotos = [
                                 <span class="verified-sa-name"><?= htmlspecialchars((string)$studentSummary['full_name'], ENT_QUOTES) ?></span>
                                 <span class="verified-sa-id"><?= htmlspecialchars((string)$studentSummary['id_number'], ENT_QUOTES) ?></span>
                             </div>
-                            <div class="d-flex gap-2 flex-wrap justify-content-end">
+                            <div class="d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentHoursModal">
                                     <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Open My Hours
                                 </button>
-                                <a href="/sahms/logout" class="btn btn-outline-secondary btn-sm">
-                                    <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>Log Out
+                            </div>
+                            <div class="sa-logout-row">
+                                <a href="/sahms/logout" class="sa-logout-link">
+                                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>Log out
                                 </a>
                             </div>
                         </div>
