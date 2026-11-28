@@ -579,7 +579,7 @@
 .verified-sa-id{font-size:.8rem;color:#6c757d;}
 
 /* Logout text link sits below the verified SA panel, outside the action row. */
-.sa-logout-row{margin-top:.55rem;text-align:right;}
+.sa-logout-row{margin-top:.65rem;text-align:center;}
 .sa-logout-link{
     display:inline-flex;align-items:center;gap:.35rem;
     font-size:.8rem;font-weight:700;letter-spacing:.01em;
