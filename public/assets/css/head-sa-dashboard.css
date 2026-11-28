@@ -166,7 +166,7 @@
                 #tab-reports .av-form{
                     font-family:"Times New Roman",Times,serif;
                     font-size:15px;color:#000;background:#fff;
-                    padding:1rem 1.25rem;
+                    padding:.5rem .8rem;
                     max-width:1040px;margin:0 auto;
                     border:1px solid #b9c4bb;
                     box-shadow:inset 0 0 0 3px #fff, inset 0 0 0 4px #d9e2da;
@@ -192,24 +192,24 @@
                     padding:.1rem .25rem;width:110px;
                 }
                 #tab-reports .av-header > div{
-                    padding:.12rem 0;border-bottom:1px dotted #cbd3cb;
+                    padding:.06rem 0;border-bottom:1px dotted #cbd3cb;
                 }
                 #tab-reports .av-semester,#tab-reports .av-date{margin-top:.15rem;}
                 #tab-reports .av-time-record{
                     margin-top:.75rem;font-size:13px;
-                    border:1px solid #9fae9f;background:#fbfdfb;padding:.35rem .6rem;
+                    border:1px solid #9fae9f;background:#fbfdfb;padding:.2rem .5rem;
                 }
                 #tab-reports .av-time-record strong{display:block;margin-bottom:.2rem;}
                 #tab-reports .av-time-record div{margin-left:1rem;}
                 #tab-reports .av-rule{border:0;border-top:1px solid #000;margin:.4rem 0 .6rem;}
                 #tab-reports .av-rule-double{
                     border-top:1px solid #000;border-bottom:1px solid #000;
-                    height:3px;background:transparent;margin:.5rem 0 .7rem;
+                    height:3px;background:transparent;margin:.25rem 0 .35rem;
                 }
                 #tab-reports .av-table-title{
                     text-align:center;font-weight:700;font-size:16px;margin-bottom:0;
                     background:#e9edf1;border:1px solid #000;border-bottom:0;
-                    padding:.2rem;
+                    padding:.1rem;
                 }
                 #tab-reports .av-table{
                     width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;
@@ -217,7 +217,7 @@
                 }
                 #tab-reports .av-table th,
                 #tab-reports .av-table td{
-                    border:1px solid #000;padding:.28rem .22rem;text-align:center;
+                    border:1px solid #000;padding:.05rem .06rem;text-align:center;
                     vertical-align:middle;background:#fff;
                 }
                 #tab-reports .av-table thead th{background:#e9edf1 !important;font-weight:700;}
@@ -230,23 +230,23 @@
                 #tab-reports .av-table .av-second{color:#0b5c34;background:#f3f9f5;}
                 #tab-reports .av-table tbody td:nth-last-child(-n+2){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
-                    display:flex;gap:5%;align-items:flex-start;margin-top:.6rem;
-                    border-top:1px solid #000;padding-top:.4rem;
+                    display:flex;gap:5%;align-items:stretch;margin-top:.4rem;
+                    border-top:1px solid #000;padding-top:.2rem;
                 }
                 #tab-reports .av-signatures{
-                    flex:1 1 55%;display:flex;flex-direction:column;gap:.6rem;
+                    flex:1 1 55%;display:flex;flex-direction:column;gap:.8rem;
                 }
                 #tab-reports .av-signature,#tab-reports .av-approval{
                     position:relative;display:block;min-width:190px;max-width:210px;
                 }
                 #tab-reports .av-signature-line{
-                    border-bottom:1px solid #000;height:28px;margin-bottom:2px;
+                    border-bottom:1px solid #000;height:32px;margin-bottom:2px;
                 }
                 #tab-reports .av-signature-date{
                     position:absolute;right:0;bottom:18px;font-size:11px;
                 }
                 #tab-reports .av-computation{
-                    flex:0 0 35%;min-height:110px;border:2px solid #000;
+                    flex:0 0 35%;align-self:stretch;min-height:0;border:2px solid #000;
                     margin-right:8%;background:#fff;
                     display:flex;justify-content:center;align-items:flex-start;
                     padding:.3rem;
