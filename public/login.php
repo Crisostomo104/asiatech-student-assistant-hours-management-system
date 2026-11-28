@@ -236,7 +236,7 @@ $bgPhotos = [
                                     </div>
                                 </div>
                             <?php endif; ?>
-                            <button type="submit" class="btn btn-primary w-100" data-turnstile-submit <?= !$turnstileConfigured ? 'disabled' : '' ?>>Log In</button>
+                            <button type="submit" class="btn btn-primary w-100" data-turnstile-submit <?= $turnstileConfigured ? 'disabled' : '' ?>>Log In</button>
                             <a class="btn btn-cancel-login w-100 mt-2" href="">
                                 <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancel Login
                             </a>
@@ -263,7 +263,7 @@ $bgPhotos = [
                                     </div>
                                 </div>
                             <?php endif; ?>
-                            <button type="submit" class="btn btn-primary w-100" data-turnstile-submit <?= !$turnstileConfigured ? 'disabled' : '' ?>>Continue</button>
+                            <button type="submit" class="btn btn-primary w-100" data-turnstile-submit <?= $turnstileConfigured ? 'disabled' : '' ?>>Continue</button>
                         </form>
                     <?php endif; ?>
 
@@ -431,7 +431,7 @@ $bgPhotos = [
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <?php if ($turnstileConfigured): ?>
-<script src="/sahms/public/assets/js/turnstile-status.js"></script>
+<script src="/sahms/public/assets/js/turnstile-status.js?v=20261129h"></script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=sahmsTurnstileReady" async defer onerror="window.sahmsTurnstileError && window.sahmsTurnstileError()"></script>
 <?php endif; ?>
 <script src="/sahms/public/assets/js/time-calculator.js" defer></script>

@@ -4,6 +4,29 @@
     let isVerified = false;
     let resizeTimer = null;
 
+    function setSubmitState(verified) {
+        document.querySelectorAll('form').forEach(function (form) {
+            var button = form.querySelector('[data-turnstile-submit]');
+            if (button) button.disabled = !verified;
+        });
+    }
+
+    // Block Enter-key submits until the security check succeeds.
+    document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' || isVerified) return;
+        var target = event.target;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'BUTTON') && target.closest('form')) {
+            event.preventDefault();
+        }
+    }, true);
+
+    document.querySelectorAll('form').forEach(function (form) {
+        if (!form.querySelector('[data-turnstile-submit]')) return;
+        form.addEventListener('submit', function (event) {
+            if (!isVerified) event.preventDefault();
+        });
+    });
+
     function setVerificationState(state) {
         const container = document.querySelector('.turnstile-widget');
         const form = container ? container.closest('form') : null;
@@ -48,22 +71,29 @@
             callback: function () {
                 isVerified = true;
                 setVerificationState('success');
+                setSubmitState(true);
             },
             'expired-callback': function () {
                 isVerified = false;
                 setVerificationState('expired');
+                setSubmitState(false);
             },
             'error-callback': function () {
                 isVerified = false;
                 setVerificationState('error');
+                setSubmitState(false);
             }
         });
     }
 
     window.sahmsTurnstileReady = renderTurnstile;
     window.sahmsTurnstileError = function () {
+        isVerified = false;
         setVerificationState('error');
+        setSubmitState(false);
     };
+
+    setSubmitState(false);
 
     window.addEventListener('resize', function () {
         if (resizeTimer !== null) window.clearTimeout(resizeTimer);
