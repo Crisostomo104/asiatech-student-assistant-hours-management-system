@@ -1136,7 +1136,7 @@ $allCashouts = get_all_ot_cashouts();
                         ];
                     }
                     $avSemesters = ['1st Semester', '2nd Semester'];
-                    $avDepartments = ['IT Dept.', 'Library', 'Custodian', 'Kinder', 'Other'];
+                    $avDepartments = ['IT Dept.', 'Library', 'Custodian', 'Kinder', 'Guard', 'Other'];
                     ?>
                     <div class="tab-pane fade" id="rpt-cashouts" role="tabpanel">
                         <div class="card rpt-card print-otregister mb-3">
