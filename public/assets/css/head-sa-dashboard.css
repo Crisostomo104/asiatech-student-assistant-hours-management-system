@@ -240,7 +240,7 @@
                     position:relative;display:block;min-width:190px;max-width:210px;
                 }
                 #tab-reports .av-signature-line{
-                    border-bottom:1px solid #000;height:45px;margin-bottom:3px;
+                    border-bottom:1px solid #000;height:38px;margin-bottom:2px;
                 }
                 #tab-reports .av-signature-date{
                     position:absolute;right:0;bottom:18px;font-size:11px;

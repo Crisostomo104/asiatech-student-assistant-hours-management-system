@@ -12,8 +12,8 @@ require_once __DIR__ . '/../php_source/dashboard_src.php';
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="icon" type="images/png" href="/sahms/images/asiatech_logo.jpeg">
     
-    <link href="/sahms/public/assets/css/dashboard.css?v=20261128z" rel="stylesheet">
-        <?php if (current_role() !== 'student_assistant'): ?><link href="/sahms/public/assets/css/head-sa-dashboard.css?v=20261128z" rel="stylesheet"><?php endif; ?>
+    <link href="/sahms/public/assets/css/dashboard.css?v=20261129c" rel="stylesheet">
+        <?php if (current_role() !== 'student_assistant'): ?><link href="/sahms/public/assets/css/head-sa-dashboard.css?v=20261129c" rel="stylesheet"><?php endif; ?>
 </head>
 <body class="bg-light">
 <nav class="navbar dashboard-navbar navbar-dark bg-dark mb-4">
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/sahms/public/assets/js/sa-name-preview.js" defer></script>
-    <script src="/sahms/public/assets/js/idle-logout.js?v=20261128z" defer></script>
+    <script src="/sahms/public/assets/js/idle-logout.js?v=20261129c" defer></script>
 <?php if (current_role() === 'head_sa'): ?>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
