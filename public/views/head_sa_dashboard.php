@@ -1236,7 +1236,7 @@ $allCashouts = get_all_ot_cashouts();
                                             <div class="av-signature">
                                                 <div class="av-signature-line"></div>
                                                 <strong><?= htmlspecialchars($_SESSION['name'] ?? 'Head SA', ENT_QUOTES) ?></strong><br>
-                                                <span>SA Adviser</span>
+                                                <span>Head SA</span>
                                                 <span class="av-signature-date"><?= date('m/d/y') ?></span>
                                             </div>
                                             <div class="av-approval">
