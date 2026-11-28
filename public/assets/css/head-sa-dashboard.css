@@ -165,7 +165,7 @@
                 /* Advance & Voucher print form */
                 #tab-reports .av-form{
                     font-family:"Times New Roman",Times,serif;
-                    font-size:17px;color:#000;background:#fff;
+                    font-size:15px;color:#000;background:#fff;
                     padding:1rem 1.25rem;
                     max-width:1040px;margin:0 auto;
                     border:1px solid #b9c4bb;
@@ -207,7 +207,7 @@
                     height:3px;background:transparent;margin:.5rem 0 .7rem;
                 }
                 #tab-reports .av-table-title{
-                    text-align:center;font-weight:700;font-size:18px;margin-bottom:0;
+                    text-align:center;font-weight:700;font-size:16px;margin-bottom:0;
                     background:#e9edf1;border:1px solid #000;border-bottom:0;
                     padding:.2rem;
                 }
@@ -244,8 +244,8 @@
                 #tab-reports .av-table tbody td:nth-last-child(2),
                 #tab-reports .av-table tbody td:nth-last-child(3){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
-                    display:flex;gap:5%;align-items:flex-start;margin-top:1.2rem;
-                    border-top:1px solid #000;padding-top:.8rem;
+                    display:flex;gap:5%;align-items:flex-start;margin-top:.6rem;
+                    border-top:1px solid #000;padding-top:.4rem;
                 }
                 #tab-reports .av-signatures{
                     flex:1 1 55%;display:flex;flex-direction:column;gap:.6rem;
@@ -254,13 +254,13 @@
                     position:relative;display:block;min-width:190px;max-width:210px;
                 }
                 #tab-reports .av-signature-line{
-                    border-bottom:1px solid #000;height:44px;margin-bottom:3px;
+                    border-bottom:1px solid #000;height:28px;margin-bottom:2px;
                 }
                 #tab-reports .av-signature-date{
                     position:absolute;right:0;bottom:18px;font-size:11px;
                 }
                 #tab-reports .av-computation{
-                    flex:0 0 35%;min-height:165px;border:2px solid #000;
+                    flex:0 0 35%;min-height:110px;border:2px solid #000;
                     margin-right:8%;background:#fff;
                     display:flex;justify-content:center;align-items:flex-start;
                     padding:.3rem;
@@ -273,10 +273,10 @@
                     #tab-reports .av-form{padding:0;max-width:97%;margin:0 auto;}
                     #tab-reports .av-select,#tab-reports .av-other{display:none !important;}
                     #tab-reports .av-table th{background:#e9edf1 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-                    #tab-reports .av-table{font-size:8px;}
-                    #tab-reports .av-table thead th{font-size:7px;white-space:nowrap;}
+                    #tab-reports .av-table{font-size:11px;}
+                    #tab-reports .av-table thead th{font-size:9px;white-space:nowrap;}
                     #tab-reports .av-table th,
-                                        #tab-reports .av-table td{padding:.08rem .04rem;}
+                                        #tab-reports .av-table td{padding:.08rem .06rem;}
                     #tab-reports .av-rule{border-top:1px solid #000;}
                     #tab-reports .av-computation{background:none !important;}
                     #tab-reports .annual-hours-table > thead th,

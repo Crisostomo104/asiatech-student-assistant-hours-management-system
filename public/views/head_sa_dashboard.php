@@ -1413,7 +1413,7 @@ function printSection(section) {
         style = document.createElement('style');
         style.innerHTML = section === 'annual'
             ? '@page { size: landscape; }'
-            : '@page { size: portrait; margin: 8mm; }';
+            : '@page { size: landscape; margin: 8mm; }';
         document.head.appendChild(style);
     }
 
