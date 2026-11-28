@@ -228,7 +228,7 @@
                 #tab-reports .av-table .av-second{color:#0b5c34;background:#f3f9f5;}
                 #tab-reports .av-table tbody td:nth-last-child(-n+2){background:#f2f7f3 !important;}
                 #tab-reports .av-bottom{
-                    display:flex;gap:5%;align-items:stretch;margin-top:.7rem;
+                    display:flex;gap:5%;align-items:stretch;margin-top:1rem;
                     border-top:1px solid #000;padding-top:.2rem;
                 }
                 #tab-reports .av-signatures{
