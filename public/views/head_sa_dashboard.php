@@ -1128,7 +1128,8 @@ $allCashouts = get_all_ot_cashouts();
                         $avSaData[(int)$avRow['user_id']] = [
                             'name'    => (string)$avRow['full_name'],
                             'advance' => (float)($avRow['advance_hrs'] ?? 0),
-                            'ot'      => (float)($avRow['ot_hrs'] ?? 0),
+                            'ot'      => max(0, (float)($avRow['total_hrs'] ?? 0) - (float)($avRow['set_hours'] ?? 0)),
+                            'excess'  => max(0, (float)($avRow['total_hrs'] ?? 0) - (float)($avRow['set_hours'] ?? 0)),
                             'first'   => $avFirst,
                             'second'  => $avSecond,
                             'months'  => $avMonths,
@@ -1192,7 +1193,7 @@ $allCashouts = get_all_ot_cashouts();
 
                                     <div class="av-time-record">
                                         <strong>Time Record:</strong>
-                                        <div>Advance: <span id="avAdvance">0</span> Hrs</div>
+                                        <div>Advance/OT: <span id="avAdvance">0</span> Hrs</div>
                                         <div>Total: <span id="avTotal">0</span> Hrs</div>
                                     </div>
                                     <hr class="av-rule av-rule-double">
@@ -1276,7 +1277,7 @@ $allCashouts = get_all_ot_cashouts();
                             namePrint.textContent = row ? row.name : '';
                             $('avRowName').textContent = row ? row.name : '';
                             const advance = row ? row.advance : 0;
-                            $('avAdvance').textContent = fmt(advance);
+                            $('avAdvance').textContent = fmt(row ? (row.excess || 0) : 0);
                             let sum = 0;
                             document.querySelectorAll('.av-first').forEach((cell) => {
                                 const key = cell.getAttribute('data-av-first');
