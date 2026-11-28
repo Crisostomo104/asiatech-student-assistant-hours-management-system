@@ -121,19 +121,48 @@ function register_user(string $idNumber, string $fullName, string $email, ?strin
 // ------------------------------------------------------------
 // Login (with rate limiting / lockout)
 // ------------------------------------------------------------
-function is_locked_out(string $loginInput): bool
+function clear_login_attempts(string $loginInput): void
+{
+    get_db()->prepare('DELETE FROM login_attempts WHERE id_number = :input')
+        ->execute([':input' => $loginInput]);
+}
+
+/**
+ * Seconds left on this identifier's lockout. Returns 0 when the account is
+ * not locked, and clears the old attempts once the 5-minute window is over.
+ */
+function login_lockout_remaining_seconds(string $loginInput): int
 {
     $pdo = get_db();
     $stmt = $pdo->prepare(
-        'SELECT COUNT(*) FROM login_attempts
+        'SELECT COUNT(*) AS attempts, MIN(attempted_at) AS first_attempt
+         FROM login_attempts
          WHERE id_number = :input AND success = 0
            AND attempted_at > (NOW() - INTERVAL :mins MINUTE)'
     );
     $stmt->bindValue(':input', $loginInput);
     $stmt->bindValue(':mins', LOCKOUT_WINDOW_MINUTES, PDO::PARAM_INT);
     $stmt->execute();
+    $row = $stmt->fetch();
 
-    return (int)$stmt->fetchColumn() >= MAX_LOGIN_ATTEMPTS;
+    if (!$row || (int)$row['attempts'] < MAX_LOGIN_ATTEMPTS || empty($row['first_attempt'])) {
+        return 0;
+    }
+
+    $remaining = (strtotime((string)$row['first_attempt']) + LOCKOUT_WINDOW_MINUTES * 60) - time();
+    if ($remaining <= 0) {
+        clear_login_attempts($loginInput);
+        return 0;
+    }
+    return $remaining;
+}
+
+function format_lockout_time(int $seconds): string
+{
+    if ($seconds >= 60) {
+        return intdiv($seconds, 60) . ' minute(s) ' . ($seconds % 60) . ' second(s)';
+    }
+    return $seconds . ' second(s)';
 }
 
 function record_login_attempt(string $loginInput, bool $success): void
@@ -158,9 +187,10 @@ function attempt_login(string $loginInput, string $password): array
 {
     $loginInput = trim($loginInput);
 
-    if (is_locked_out($loginInput)) {
+    $lockoutSeconds = login_lockout_remaining_seconds($loginInput);
+    if ($lockoutSeconds > 0) {
         audit_log(null, 'LOGIN_BLOCKED_LOCKOUT', 'users', null, ['login_input' => $loginInput]);
-        return ['ok' => false, 'error' => 'Too many failed attempts. Please try again in ' . LOCKOUT_WINDOW_MINUTES . ' minutes.'];
+        return ['ok' => false, 'error' => 'You reached the login attempts limit. Try again in ' . format_lockout_time($lockoutSeconds) . '.'];
     }
 
     $pdo = get_db();
@@ -177,6 +207,10 @@ function attempt_login(string $loginInput, string $password): array
     if (!$user || !password_verify($password, $user['password_hash'])) {
         record_login_attempt($loginInput, false);
         audit_log($user['user_id'] ?? null, 'LOGIN_FAILED', 'users', $user['user_id'] ?? null, ['login_input' => $loginInput]);
+        $lockoutSeconds = login_lockout_remaining_seconds($loginInput);
+        if ($lockoutSeconds > 0) {
+            return ['ok' => false, 'error' => 'You reached the login attempts limit. Try again in ' . format_lockout_time($lockoutSeconds) . '.'];
+        }
         return ['ok' => false, 'error' => $genericError];
     }
 
@@ -188,6 +222,8 @@ function attempt_login(string $loginInput, string $password): array
             ->execute([':h' => $newHash, ':id' => $user['user_id']]);
     }
 
+    // A successful sign-in clears the failed-attempt counter for this identifier.
+    clear_login_attempts($loginInput);
     record_login_attempt($loginInput, true);
 
     // Regenerate session ID on login to prevent session fixation.

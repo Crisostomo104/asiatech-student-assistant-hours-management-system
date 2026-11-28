@@ -41,7 +41,7 @@ require_once __DIR__ . '/../includes/turnstile.php';
 
 // --- Dynamic, Head-SA-editable settings (see public/settings.php) ---
 define('MAX_LOGIN_ATTEMPTS',              (int)get_setting('login_max_attempts', 5));
-define('LOCKOUT_WINDOW_MINUTES',          (int)get_setting('login_lockout_window_minutes', 15));
+define('LOCKOUT_WINDOW_MINUTES',          5); // fixed 5-minute login lockout
 define('MAX_PHOTO_UPLOAD_MB',           (float)get_setting('max_photo_upload_mb', 5));
 define('BREAK_DEDUCTION_THRESHOLD_HOURS',(float)get_setting('break_deduction_threshold_hours', 8));
 define('DEFAULT_REQUIRED_HOURS',        (float)get_setting('default_required_hours', 200));
