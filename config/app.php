@@ -76,3 +76,26 @@ if (session_status() === PHP_SESSION_NONE) {
     ]);
     session_start();
 }
+
+/**
+ * End any session (Head SA login or verified SA lookup) after 30 minutes
+ * without a request. A status/ping read intentionally does not reset this.
+ */
+function enforce_idle_timeout(int $minutes = 30): void
+{
+    $limitSeconds = max(1, $minutes) * 60;
+    if (isset($_SESSION['last_activity'])
+        && (time() - (int)$_SESSION['last_activity']) > $limitSeconds) {
+        $_SESSION = [];
+        session_unset();
+        session_destroy();
+        $self = basename($_SERVER['PHP_SELF'] ?? '');
+        if ($self !== 'login.php') {
+            header('Location: /sahms/login?err=' . rawurlencode('Session expired after 30 minutes of inactivity. Please sign in again.'));
+            exit;
+        }
+        return;
+    }
+    $_SESSION['last_activity'] = time();
+}
+enforce_idle_timeout(30);

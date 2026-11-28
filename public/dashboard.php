@@ -509,6 +509,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/sahms/public/assets/js/sa-name-preview.js" defer></script>
+    <script src="/sahms/public/assets/js/idle-logout.js?v=20261128q" defer></script>
 <?php if (current_role() === 'head_sa'): ?>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

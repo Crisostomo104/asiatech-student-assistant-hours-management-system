@@ -7,7 +7,7 @@ if (!empty($_SESSION['user_id']) && current_role() === 'head_sa') {
     exit;
 }
 
-$error = $_SESSION['flash_error'] ?? null;
+$error = $_GET['err'] ?? ($_SESSION['flash_error'] ?? null);
 unset($_SESSION['flash_error']);
 $identifier = '';
 $headIdentifier = null;
@@ -15,6 +15,14 @@ $studentSummary = null;
 $summaryYear = (int)date('Y');
 $turnstileSiteKey = turnstile_site_key();
 $turnstileConfigured = turnstile_is_configured();
+
+// A verified SA lookup survives a refresh through the session, but only
+// until logout or the 30-minute idle timeout clears it.
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && !empty($_SESSION['sa_lookup']['user_id'])) {
+    $saLookupYear = (int)($_SESSION['sa_lookup']['year'] ?? $summaryYear);
+    $saRows = get_annual_hours_summary($saLookupYear, (int)$_SESSION['sa_lookup']['user_id']);
+    $studentSummary = $saRows ? $saRows[0] : null;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
@@ -38,6 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($account && (int)$account['is_active'] === 1 && $account['role'] === 'student_assistant') {
             $rows = get_annual_hours_summary($summaryYear, (int)$account['user_id']);
             $studentSummary = $rows ? $rows[0] : null;
+            if ($studentSummary) {
+                $_SESSION['sa_lookup'] = [
+                    'user_id'   => (int)$account['user_id'],
+                    'id_number' => (string)$studentSummary['id_number'],
+                    'full_name' => (string)$studentSummary['full_name'],
+                    'year'      => $summaryYear,
+                ];
+            }
         } elseif ($account && (int)$account['is_active'] === 1 && $account['role'] === 'head_sa') {
             $headIdentifier = $identifier;
         } else {
@@ -173,9 +189,14 @@ $bgPhotos = [
                                 <span class="verified-sa-name"><?= htmlspecialchars((string)$studentSummary['full_name'], ENT_QUOTES) ?></span>
                                 <span class="verified-sa-id"><?= htmlspecialchars((string)$studentSummary['id_number'], ENT_QUOTES) ?></span>
                             </div>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentHoursModal">
-                                <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Open My Hours
-                            </button>
+                            <div class="d-flex gap-2 flex-wrap justify-content-end">
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentHoursModal">
+                                    <i class="bi bi-clock-history me-1" aria-hidden="true"></i>Open My Hours
+                                </button>
+                                <a href="/sahms/logout" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>Log Out
+                                </a>
+                            </div>
                         </div>
                     <?php elseif ($headIdentifier !== null): ?>
                         <form method="post" novalidate>
@@ -412,6 +433,7 @@ $bgPhotos = [
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&amp;onload=sahmsTurnstileReady" async defer onerror="window.sahmsTurnstileError && window.sahmsTurnstileError()"></script>
 <?php endif; ?>
 <script src="/sahms/public/assets/js/time-calculator.js" defer></script>
+<script src="/sahms/public/assets/js/idle-logout.js?v=20261128q" defer></script>
 <script>
 const togglePassword = document.getElementById('togglePassword');
 const password = document.getElementById('password');
